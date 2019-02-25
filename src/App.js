@@ -1,48 +1,86 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
-// import Camera from './Camera'
-import Camera from 'react-html5-camera-photo';
-import 'react-html5-camera-photo/build/css/index.css';
-import WebcamCapture from './WebcamCapture'
+import ReactDOM from 'react-dom';
+import WebcamCapture from './components/WebcamCapture'
 import Webcam from "react-webcam";
+import { createStore } from "redux"
+import {BrowserRouter as Router, Route, Link, NavLink, Switch} from "react-router-dom"
+import {withRouter} from 'react-router-dom'
+import Home from './components/home.js'
+import CaptionSubmissionPage from './components/CaptionSubmissionPage.js'
+import VotingPage from './components/VotingPage.js'
+import Results from './components/Results.js'
+
+const API_URL = 'http://localhost:3000/api/v1'
 
 class App extends Component {
   state={
     photos:[],
     currentPhoto: ''
   }
-  //
-  // onTakePhoto (dataUri) {
-  //   // Do stuff with the dataUri photo...
-  //   console.log('takePhoto');
-  //   this.setState({
-  //     currentPhoto: dataUri
-  //   }, this.download(dataUri))
-  //
-  //
-  // }
-//
-//   download(photo) {
-//   // fake server request, getting the file url as response
-//   setTimeout(() => {
-//     const response = {
-//       file: photo,
-//     };
-//     // server sent the url to the file!
-//     // now, let's download:
-//     window.location.href = response.file;
-//     // you could also do:
-//     // window.open(response.file);
-//   }, 100);
-// }
 
+  // renderHomePage=()=>{
+  //   return (
+  //     <>
+  //       <Home />
+  //     </>
+  //   )
+  // }
+  //
+  // renderWebcam = ()=>{
+  //   return(
+  //     <>
+  //     <WebcamCapture/>
+  //     </>
+  //   )
+  // }
+  //
+  // renderCaptionSubmissionPage = ()=>{
+  //   return(
+  //     <>
+  //       <CaptionSubmissionPage/>
+  //     </>
+  //   )
+  // }
+  //
+  // renderVotingPage = ()=>{
+  //   return(
+  //     <>
+  //       <VotingPage/>
+  //     </>
+  //   )
+  // }
+
+  renderPage=(page)=>{
+  switch (page) {
+      case 'home':
+        return <Home />
+      case 'webcam':
+        return <WebcamCapture />
+      case 'captions':
+        return <CaptionSubmissionPage />
+      case 'voting':
+        return <VotingPage />
+      case 'results':
+        return <Results />
+      default:
+        return(<></>)
+    }
+  }
 
   render() {
     return (
-      <div className="App">
-        <WebcamCapture/>
-      </div>
+      <Router>
+        <div className="App">
+        <Switch>
+          <Route exact path={"/"} component={()=>this.renderPage('home')}/>
+          <Route exact path={"/webcam"} component={()=>this.renderPage('webcam')}/>
+          <Route exact path={"/submitCaptions"} component={()=>this.renderPage('captions')}/>
+          <Route exact path={"/votingPage"} component={()=>this.renderPage('voting')}/>
+          <Route exact path={"/results"} component={()=>this.renderPage('results')}/>
+        </Switch>
+        </div>
+      </Router>
     );
   }
 }
