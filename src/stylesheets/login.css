@@ -1,0 +1,15 @@
+.login{
+  position: inherit;
+  transform: translateY(50%);
+}
+
+strong:hover{
+  color: blue
+}
+
+.new-user-form{
+  height: auto;
+  width: auto;
+  border: 10px;
+  border-color: solid black;
+}

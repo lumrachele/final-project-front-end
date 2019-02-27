@@ -5,8 +5,9 @@ import {anotherGame} from '../actions/anotherGame.js'
 // import {init} from '../actions/init.js'
 import { Button, Header, Icon, Image } from 'semantic-ui-react'
 import ResultsTable from './ResultsTable.js'
+import '../stylesheets/results.css'
 
-// const API_URL = 'http://localhost:3000/api/v1'
+
 class Results extends Component {
 
   state={
@@ -16,13 +17,6 @@ class Results extends Component {
   }
   //
   componentDidMount(){
-  //   fetch(API_URL+`/game_captions`)
-  //   .then(res=>res.json())
-  //   .then(gc=>{
-  //     this.setState({
-  //       gameCaptions: gc
-  //     })
-  //   })
     this.setState({
       gameCaptions: this.props.submittedCaptions,
       prompt: this.props.currentPrompt.caption.text
@@ -38,14 +32,12 @@ class Results extends Component {
   winningCaption=()=>{
     const winningText = this.sortCaptionsByPoints().slice(0,1).map(gc=> gc.caption.text)
     if (winningText===this.state.prompt){
-      return (<> {winningText}
-                <Icon name='star' size='large' />
-              </>)
+      return (<Header.Content>
+                <Icon name='star'size="huge" /> winningText
+              </Header.Content>)
     } else {
       return winningText
     }
-
-
   }
 
   startNewGame=()=>{
@@ -56,33 +48,27 @@ class Results extends Component {
   render(){
 
     return(
-      <>
+      <div className="results">
       <Header size="large">Winner:</Header>
-      <br></br>
-      <Header size="huge">{this.winningCaption()}</Header >
+      <Header size="huge" icon>
+      {this.winningCaption()}
+      </Header >
+
       <Image src={this.props.lastAddedPhoto} centered />
+      <div className="table">
       <ResultsTable sortedResults={this.sortCaptionsByPoints()}/>
-      <Button primary onClick={this.startNewGame}>
+      </div>
+      <Button color="orange" onClick={this.startNewGame}>
       START A NEW GAME
       </Button>
-      </>
+      </div>
     )
   }
 }
-// <ul>
-// {this.props.submittedCaptions && this.sortCaptionsByPoints().slice(1).map(gc=>{
-//   return <li key={gc.id}>
-//   {gc.caption.text} {gc.points} points
-//   </li>
-// })}
-// </ul>
+
 
 const mapStateToProps = (state)=>{
   return state
 }
-
-// const mapDispatchToProps = (dispatch)=>{
-//   return {init: dispatch({type: '@@INIT'})}
-// }
 
 export default connect(mapStateToProps, { anotherGame })(withRouter(Results))

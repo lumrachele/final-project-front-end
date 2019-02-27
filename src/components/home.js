@@ -119,7 +119,7 @@ class Home extends Component{
         The results are in, and the original prompt is revealed!
       </List.Item>
       </List>
-      <Button primary onClick={this.handleClick}>START A NEW GAME!</Button>
+      <Button color="orange" onClick={this.handleClick}>START A NEW GAME!</Button>
       </Container>
       </>
     )

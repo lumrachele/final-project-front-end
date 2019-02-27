@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import {addGameCaptions} from '../actions/addGameCaptions.js'
 import {withRouter} from 'react-router-dom'
 import { connect } from 'react-redux'
-import { Button, Image, Header } from 'semantic-ui-react'
+import { Button, Grid, Image, Header, Form, Label } from 'semantic-ui-react'
 
 // import CaptionContainer from './CaptionContainer'
 
@@ -12,8 +12,31 @@ const API_URL = 'http://localhost:3000/api/v1'
 class CaptionSubmissionPage extends Component {
   state = {
     photo: "",
-    currentInput: ""
+    currentInput: "",
+    timer: null,
+    counter: 20,
   }
+
+
+  componentWillUnmount() {
+    clearInterval(this.state.timer);
+  }
+
+  decrement=()=>{
+    if (this.state.counter > 0){
+      this.setState({
+        counter: this.state.counter - 1
+      })
+    }
+    else{
+    // this.capture()
+    // // this.clearInterval(this.state.timer);
+    // this.setState({
+    //   captured: true
+    // })
+    }
+  }
+
 
 
   componentDidMount(){
@@ -24,6 +47,8 @@ class CaptionSubmissionPage extends Component {
         photo: this.props.lastAddedPhoto
       })
     )
+    let timer = setInterval(this.decrement, 1000)
+    this.setState({timer})
   }
 
 
@@ -83,22 +108,27 @@ class CaptionSubmissionPage extends Component {
     return(
       <div className={"captionSubmissionPage"}>
       <Header size="huge">What do you think the original prompt was?</Header>
-      <h3>You have <strong>this much</strong> time remaining.</h3>
+      <Header as="h2">You have <strong>
+        {this.state.counter} s</strong> remaining.</Header>
 
       {this.state.photo &&
         <Image centered src={this.state.photo} alt={"hi"}/>
       }
-
-        <form onSubmit={this.handleSubmit}>
-          <label>Enter your submissions here!</label>
+      <Grid textAlign='center' style={{ height: '100%' }} verticalAlign='middle'>
+            <Grid.Column style={{ maxWidth: 450 }}>
+        <Form onSubmit={this.handleSubmit} style={{ maxWidth: 450 }} >
+          <Label size="large">Enter your submissions here!</Label>
           <br></br>
           <input type="text" name="captionSubmission" onChange={this.handleChange}value={this.state.currentInput}/>
           <br></br>
+          <br></br>
           <Button secondary>Submit Answer</Button>
-        </form>
+        </Form>
+        </Grid.Column>
+      </Grid>
         <br></br>
         {this.props.submittedCaptions.length >= 3 &&
-          <Button primary onClick={this.handleClick}>Go to Voting</Button>
+          <Button color="orange" onClick={this.handleClick}>Go to Voting</Button>
         }
       </div>
     )
