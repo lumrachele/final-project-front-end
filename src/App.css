@@ -31,3 +31,17 @@
     transform: rotate(360deg);
   }
 }
+
+.gameplay {
+  float: right;
+  text-align: left;
+  transform: translateY(50%);
+  transform: translateX(-20%);
+}
+
+.rules{
+  float: left;
+  /* transform: translateY(50%); */
+  align-items: center;
+  transform: translateX(20%);
+}
