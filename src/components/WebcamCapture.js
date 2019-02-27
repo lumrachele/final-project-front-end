@@ -1,12 +1,14 @@
 import React, { Component } from 'react'
 import Webcam from "react-webcam";
-import ReactDOM from 'react-dom'
+// import ReactDOM from 'react-dom'
 import { connect } from 'react-redux'
 import { addPhoto } from '../actions/addPhoto'
 import { withRouter } from 'react-router-dom'
+import { Button, Image } from 'semantic-ui-react'
+
 const API_URL = 'http://localhost:3000/api/v1'
 
-class WebcamCapture extends React.Component {
+class WebcamCapture extends Component {
   state={
     pic:""
   }
@@ -14,10 +16,11 @@ class WebcamCapture extends React.Component {
     this.webcam = webcam;
   };
 
+
   capture = () => {
     const imageSrc = this.webcam.getScreenshot();
 
-    fetch(API_URL+`/user_games/1`, {method: "PATCH",
+    fetch(API_URL+`/user_games/${this.props.currentUserGame.id}`, {method: "PATCH",
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json'
@@ -64,21 +67,27 @@ class WebcamCapture extends React.Component {
   width: 1280,
   height: 720,
   facingMode: "user"
-};
+}
 
 
     return (
       <div>
         {this.state.pic ?
           <>
-            <img src={this.state.pic} alt={"hi"}/>
+            <Image centered src={this.state.pic} alt={"hi"}/>
             <br></br>
-            <button onClick={this.download}>download photo</button>
             <br></br>
-            <button onClick={this.goToSubmissions}>Dispatch Photo to Gameroom</button>
+            <Button primary onClick={this.goToSubmissions}>Dispatch Photo to Gameroom</Button>
+            <br></br>
+            <br></br>
+            <a href={this.state.pic} title={this.props.currentPrompt.id} download target="_blank" rel="noopener noreferrer">
+            Download photo</a>
+
           </>
           :
           <>
+          <h2>Your prompt: <br></br>{this.props.currentPrompt && this.props.currentPrompt.caption.text}</h2>
+
           <Webcam
             audio={false}
 
@@ -88,7 +97,7 @@ class WebcamCapture extends React.Component {
             videoConstraints={videoConstraints}
           />
           <br></br>
-          <button onClick={this.capture}>Capture photo</button>
+          <Button onClick={this.capture}>Capture photo</Button>
           </>
         }
       </div>
@@ -97,7 +106,7 @@ class WebcamCapture extends React.Component {
 }
 
 const mapStateToProps = (state)=>{
-  console.log()
+  console.log(state)
   return state
 }
 //
@@ -111,6 +120,7 @@ const mapStateToProps = (state)=>{
 
 export default withRouter(connect(mapStateToProps, { addPhoto })(WebcamCapture))
 
-// <a href={this.state.pic} title="hello" download>
-// Download photo
+// <Button onClick={this.download}>download photo</Button>
+
+
 // </a>

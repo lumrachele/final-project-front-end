@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
 // import shuffle from 'shuffle-array'
+// import { Button } from 'semantic-ui-react'
 
 class CaptionContainer extends Component {
 
