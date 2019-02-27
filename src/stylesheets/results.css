@@ -1,0 +1,10 @@
+.results{
+  position: inherit;
+  transform: translateY(10%);
+  align-items: center;
+
+}
+
+.table{
+  position: inherit;
+}

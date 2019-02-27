@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 // import CaptionContainer from './CaptionContainer'
-import { Button, List, Header } from 'semantic-ui-react'
+import { Image, Button, List, Header } from 'semantic-ui-react'
 
 const API_URL = 'http://localhost:3000/api/v1'
 let pointValue = 3
@@ -33,20 +33,11 @@ class VotingPage extends Component {
   }
 
   componentDidMount(){
-    // fetch(API_URL+`/games/${this.props.currentGame.id}`)
-    // .then(res=>res.json())
-    // .then(game=>{
-    //   this.setState({
-    //     captions: game.captions,
-    //     gameCaptions: game.game_captions
-    //   })
-    // })
     pointValue = 3
   }
 
   handleVote = (event, gc)=>{
-    // console.log(event.target.innerText+=` ${pointValue} points `)
-    // const foundGC = this.props.submittedCaptions.find(gc => gc.caption_id===id)
+
     if (pointValue > 0){
       event.target.innerText+=` ${pointValue} points `
       fetch(API_URL+`/game_captions/${gc.id}`, {method: 'PATCH',
@@ -84,6 +75,9 @@ class VotingPage extends Component {
       <>
       <Header size='huge'>TIME TO VOTE!</Header>
       <Header as='h3'>Select your top 3 choices</Header>
+      {this.props.lastAddedPhoto &&
+        <Image centered src={this.props.lastAddedPhoto} alt={"hi"}/>
+      }
       <List as='ul' size='huge'>
       {this.shuffleCaptions().map((gc)=>{
         return <List.Item as='li' key={gc.id} onClick={(event)=>this.handleVote(event, gc)}>
@@ -92,8 +86,8 @@ class VotingPage extends Component {
       })
       }
       </List>
-      <Header as='h2'>TIME'S UP! - make this into another component</Header>
-      <Button onClick={this.renderResults}>Go to results!</Button>
+      // <Header as='h2'>TIME'S UP! - make this into another component</Header>
+      <Button color="orange" onClick={this.renderResults}>Go to results!</Button>
       </>
     )
   }

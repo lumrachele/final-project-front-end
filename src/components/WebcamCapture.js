@@ -4,17 +4,45 @@ import Webcam from "react-webcam";
 import { connect } from 'react-redux'
 import { addPhoto } from '../actions/addPhoto'
 import { withRouter } from 'react-router-dom'
-import { Button, Image } from 'semantic-ui-react'
+import { Header, Button, Image } from 'semantic-ui-react'
 
 const API_URL = 'http://localhost:3000/api/v1'
 
 class WebcamCapture extends Component {
   state={
-    pic:""
-  }
+    pic:"",
+    timer: null,
+    counter: 5,
+    captured: false
+  };
+
   setRef = webcam => {
     this.webcam = webcam;
   };
+
+  componentDidMount(){
+    let timer = setInterval(this.decrement, 1000)
+    this.setState({timer})
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.state.timer);
+  }
+
+  decrement=()=>{
+    if (this.state.counter > 0){
+      this.setState({
+        counter: this.state.counter - 1
+      })
+    }
+    else{
+    // this.capture()
+    // // this.clearInterval(this.state.timer);
+    // this.setState({
+    //   captured: true
+    // })
+    }
+  }
 
 
   capture = () => {
@@ -72,17 +100,19 @@ class WebcamCapture extends Component {
 
     return (
       <div>
+      <Header as="h2">
+      {this.state.counter} s
+      </Header>
         {this.state.pic ?
           <>
             <Image centered src={this.state.pic} alt={"hi"}/>
             <br></br>
             <br></br>
-            <Button primary onClick={this.goToSubmissions}>Dispatch Photo to Gameroom</Button>
+            <Button color="orange" onClick={this.goToSubmissions}>Dispatch Photo to Gameroom</Button>
             <br></br>
             <br></br>
             <a href={this.state.pic} title={this.props.currentPrompt.id} download target="_blank" rel="noopener noreferrer">
             Download photo</a>
-
           </>
           :
           <>
@@ -97,7 +127,7 @@ class WebcamCapture extends Component {
             videoConstraints={videoConstraints}
           />
           <br></br>
-          <Button onClick={this.capture}>Capture photo</Button>
+          <Button color="orange" onClick={this.capture}>Capture photo</Button>
           </>
         }
       </div>

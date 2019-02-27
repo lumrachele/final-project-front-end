@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import 'semantic-ui-css/semantic.min.css'
 import { Header, Segment, Button } from 'semantic-ui-react'
-import './App.css';
+import './stylesheets/App.css';
 // import ReactDOM from 'react-dom';
 import WebcamCapture from './components/WebcamCapture'
 // import Webcam from "react-webcam";

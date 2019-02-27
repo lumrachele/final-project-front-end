@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Table, Icon } from 'semantic-ui-react'
+import { Table, Icon, Grid } from 'semantic-ui-react'
+import '../stylesheets/results.css'
 
 class ResultsTable extends Component {
 
@@ -8,7 +9,10 @@ class ResultsTable extends Component {
 
   render(){
     return(
-      <Table>
+      <Grid textAlign='center' style={{ height: '100%' }} verticalAlign='middle'>
+            <Grid.Column style={{ maxWidth: 450 }}>
+
+      <Table style={{ maxWidth: 450 }} textAlign="center" className="table">
         <Table.Body>
         {this.props.currentPrompt &&
           this.props.sortedResults.slice(1).map(gc=>{
@@ -28,6 +32,8 @@ class ResultsTable extends Component {
 
         </Table.Body>
       </Table>
+      </Grid.Column>
+    </Grid>
     )
   }
 
