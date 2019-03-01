@@ -5,15 +5,13 @@ import { connect } from 'react-redux'
 import { addPhoto } from '../actions/addPhoto'
 import { withRouter } from 'react-router-dom'
 import { Header, Button, Image } from 'semantic-ui-react'
-
-const API_URL = 'http://localhost:3000/api/v1'
+import {API_URL} from '../constants/constants.js'
 
 class WebcamCapture extends Component {
   state={
     pic:"",
     timer: null,
-    counter: 5,
-    captured: false
+    counter: 5
   };
 
   setRef = webcam => {
@@ -35,12 +33,9 @@ class WebcamCapture extends Component {
         counter: this.state.counter - 1
       })
     }
-    else{
-    // this.capture()
-    // // this.clearInterval(this.state.timer);
-    // this.setState({
-    //   captured: true
-    // })
+    else {
+    this.capture()
+    clearInterval(this.state.timer);
     }
   }
 
@@ -124,7 +119,7 @@ class WebcamCapture extends Component {
             ref={this.setRef}
             screenshotFormat="image/jpeg"
 
-            videoConstraints={videoConstraints}
+
           />
           <br></br>
           <Button color="orange" onClick={this.capture}>Capture photo</Button>

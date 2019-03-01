@@ -3,10 +3,8 @@ import {addGameCaptions} from '../actions/addGameCaptions.js'
 import {withRouter} from 'react-router-dom'
 import { connect } from 'react-redux'
 import { Button, Grid, Image, Header, Form, Label } from 'semantic-ui-react'
-
-// import CaptionContainer from './CaptionContainer'
-
-const API_URL = 'http://localhost:3000/api/v1'
+import { ActionCable } from 'react-actioncable-provider'
+import {API_URL} from '../constants/constants.js'
 
 
 class CaptionSubmissionPage extends Component {
@@ -14,9 +12,9 @@ class CaptionSubmissionPage extends Component {
     photo: "",
     currentInput: "",
     timer: null,
-    counter: 20,
+    counter: 30,
+    showForm: true
   }
-
 
   componentWillUnmount() {
     clearInterval(this.state.timer);
@@ -29,6 +27,11 @@ class CaptionSubmissionPage extends Component {
       })
     }
     else{
+      // remove the form
+      this.setState({
+        showForm: false
+      })
+      clearInterval(this.state.timer);
     // this.capture()
     // // this.clearInterval(this.state.timer);
     // this.setState({
@@ -104,6 +107,7 @@ class CaptionSubmissionPage extends Component {
     this.props.history.push('/votingPage')
   }
 
+  // <ActionCable />
   render(){
     return(
       <div className={"captionSubmissionPage"}>
@@ -114,6 +118,7 @@ class CaptionSubmissionPage extends Component {
       {this.state.photo &&
         <Image centered src={this.state.photo} alt={"hi"}/>
       }
+    { this.showForm &&
       <Grid textAlign='center' style={{ height: '100%' }} verticalAlign='middle'>
             <Grid.Column style={{ maxWidth: 450 }}>
         <Form onSubmit={this.handleSubmit} style={{ maxWidth: 450 }} >
@@ -125,7 +130,7 @@ class CaptionSubmissionPage extends Component {
           <Button secondary>Submit Answer</Button>
         </Form>
         </Grid.Column>
-      </Grid>
+      </Grid>}
         <br></br>
         {this.props.submittedCaptions.length >= 3 &&
           <Button color="orange" onClick={this.handleClick}>Go to Voting</Button>

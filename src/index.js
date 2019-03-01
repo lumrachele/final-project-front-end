@@ -6,10 +6,12 @@ import * as serviceWorker from './serviceWorker';
 import { Provider } from 'react-redux'
 import { createStore } from 'redux'
 import 'semantic-ui-css/semantic.min.css'
-// import { myReducer } from './reducers/myReducer.js'
-// const API_URL = 'http://localhost:3000/api/v1/'
+import { ActionCableProvider } from 'react-actioncable-provider'
+
 
 const defaultState = {
+  games: [],
+  players: [],
   currentUser: null,
   currentGame: null,
   currentPrompt: null,
@@ -24,13 +26,20 @@ const myReducer = (state = defaultState, action) =>{
     case 'ADD_CURRENT_USER':
       return {
         ...state,
-        currentUser: action.user
+        currentUser: action.user,
+        players: [...state.players, action.user]
       }
     case 'ADD_USER_GAME':
       return {
         ...state,
-        currentUserGame: action.usergame
+        currentUserGame: action.usergame,
       }
+    case 'ADD_PLAYER_TO_EXISTING_GAME':
+    return{
+      ...state,
+      players: [...state.players, action.player],
+      currentGame: action.currentGame
+    }
     case 'ADD_PHOTO':
       return {
         ...state,
@@ -73,9 +82,11 @@ store.subscribe(()=> {
 })
 
 ReactDOM.render(
-    <Provider store={store}>
-    <App />
-    </Provider>
+  <ActionCableProvider url="ws://localhost:3000/api/v1/cable">
+      <Provider store={store}>
+        <App />
+      </Provider>
+    </ActionCableProvider>
   , document.getElementById('root'));
 
 serviceWorker.unregister();

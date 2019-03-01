@@ -2,10 +2,9 @@ import shuffle from 'shuffle-array'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
-// import CaptionContainer from './CaptionContainer'
 import { Image, Button, List, Header } from 'semantic-ui-react'
+import {API_URL} from '../constants/constants.js'
 
-const API_URL = 'http://localhost:3000/api/v1'
 let pointValue = 3
 
 // MVP: click on top 3 votes
@@ -86,7 +85,7 @@ class VotingPage extends Component {
       })
       }
       </List>
-      // <Header as='h2'>TIME'S UP! - make this into another component</Header>
+
       <Button color="orange" onClick={this.renderResults}>Go to results!</Button>
       </>
     )

@@ -5,11 +5,9 @@ import { addCurrentUser } from '../actions/addCurrentUser'
 import { init } from '../actions/init'
 import { Header, Image, Button, Grid, Form, Segment, Message } from 'semantic-ui-react'
 import '../stylesheets/login.css'
-
-const API_URL = 'http://localhost:3000/api/v1'
+import {API_URL} from '../constants/constants.js'
 
 class Login extends Component {
-
   state={
     username: "",
     showNewUserForm: false,
@@ -69,31 +67,30 @@ class Login extends Component {
       <div className="login">
 
       <Header as="h2" icon textAlign="center">
-      <Image src="http://is2.mzstatic.com/image/thumb/Purple62/v4/2b/ab/cc/2babccfc-f857-765f-4cf0-b645e6bd373c/source/175x175-75.png"/>
-      <Header.Content>
-        WePoVo!
-      </Header.Content>
+        <Image src="http://is2.mzstatic.com/image/thumb/Purple62/v4/2b/ab/cc/2babccfc-f857-765f-4cf0-b645e6bd373c/source/175x175-75.png"/>
+        <Header.Content>Oui!</Header.Content>
+        <Header.Subheader></Header.Subheader>
       </Header>
       <br></br>
       <Grid textAlign='center' style={{ height: '100%' }} verticalAlign='middle'>
-            <Grid.Column style={{ maxWidth: 450 }}>
-              <Header as='h3' color='orange' textAlign='center'>
-                 Log-in to your account
-              </Header>
-              <Form size='large' onSubmit={this.handleSubmit}>
-                <Segment stacked>
-                  <Form.Input fluid icon='user' iconPosition='left' placeholder='username' onChange={this.handleChange}/>
-                  <Button color="orange" type="submit" name="submit" fluid size='large'>
-                    Login
-                  </Button>
-                </Segment>
-              </Form>
-              <Message>
-                New to us?
-                <strong size="medium" onClick={this.handleClick}> Sign Up</strong>
-              </Message>
-            </Grid.Column>
-          </Grid>
+        <Grid.Column style={{ maxWidth: 450 }}>
+          <Header as='h3' color='orange' textAlign='center'>
+             Log-in to your account
+          </Header>
+          <Form size='large' onSubmit={this.handleSubmit}>
+            <Segment stacked>
+              <Form.Input fluid icon='user' iconPosition='left' placeholder='username' onChange={this.handleChange}/>
+              <Button color="orange" type="submit" name="submit" fluid size='large'>
+                Login
+              </Button>
+            </Segment>
+          </Form>
+          <Message>
+            New to us?
+            <strong size="medium" onClick={this.handleClick}> Sign Up</strong>
+          </Message>
+        </Grid.Column>
+      </Grid>
       </div>
     )
   }
