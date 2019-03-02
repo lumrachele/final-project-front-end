@@ -7,25 +7,7 @@ import {API_URL} from '../constants/constants.js'
 
 let pointValue = 3
 
-// MVP: click on top 3 votes
-// 1st click = 1st place - 3 points
-// 2nd click = 2nd place - 2 points
-// 3rd click = 3rd place - 1 point
-
-// when a person clicks on a vote this will display
-// 1st, 2nd, or third place
-
-// on click, find the instance of gameCaption
-// patch the points to equal 3 on first click
-
-// each click, the point value can be decremented by 1 point til 0
-
-
-//when I use action cables, it should be a patch request to add points
-// on to whatever value is already stored in points.
-
 class VotingPage extends Component {
-
   state={
     captions: [],
     gameCaptions: []
@@ -56,9 +38,8 @@ class VotingPage extends Component {
     else {
       alert('You may only vote on your top 3 choices.')
     }
-
   }
-  //
+
   shuffleCaptions = ()=>{
     return shuffle(this.props.submittedCaptions)
   }
@@ -82,15 +63,13 @@ class VotingPage extends Component {
         return <List.Item as='li' key={gc.id} onClick={(event)=>this.handleVote(event, gc)}>
           {gc.caption.text}
           </List.Item>
-      })
+        })
       }
       </List>
-
       <Button color="orange" onClick={this.renderResults}>Go to results!</Button>
       </>
     )
   }
-
 }
 
 const mapStateToProps = (state)=>{

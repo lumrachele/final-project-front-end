@@ -2,10 +2,7 @@ import React, { Component } from 'react';
 import 'semantic-ui-css/semantic.min.css'
 import { Header, Segment, Button } from 'semantic-ui-react'
 import './stylesheets/App.css';
-// import ReactDOM from 'react-dom';
 import WebcamCapture from './components/WebcamCapture'
-// import Webcam from "react-webcam";
-// import { createStore } from "redux"
 import {BrowserRouter as Router, Route, Switch} from "react-router-dom"
 // import {withRouter} from 'react-router-dom'
 import Login from './components/login.js'
@@ -13,6 +10,9 @@ import Home from './components/home.js'
 import CaptionSubmissionPage from './components/CaptionSubmissionPage.js'
 import VotingPage from './components/VotingPage.js'
 import Results from './components/Results.js'
+import { ActionCableConsumer } from 'react-actioncable-provider'
+import { connect } from 'react-redux'
+import { getWaitingRoomPlayers } from './actions/getWaitingRoomPlayers.js'
 
 // const API_URL = 'http://localhost:3000/api/v1'
 
@@ -30,7 +30,7 @@ class App extends Component {
         return <>
                   <Segment clearing>
                   <Header as='h2' floated='right'>
-                    <Button> Log Out</Button>
+                    <Button>Log Out</Button>
                   </Header>
                   </Segment>
                   <br></br>
@@ -77,9 +77,22 @@ class App extends Component {
     }
   }
 
+  handleReceived = (theObjKeyValuePair)=>{
+    console.log("i hope this is the game:", theObjKeyValuePair.game)
+    this.props.getWaitingRoomPlayers(theObjKeyValuePair.game)
+
+
+  }
+
   render() {
     return (
       <>
+      <ActionCableConsumer
+      channel={{channel: 'HomeChannel'}}
+      onReceived={(theObjImReceiving)=>{
+        this.handleReceived(theObjImReceiving)
+      }}
+       />
       <Router>
       <div className="App">
         <Switch>
@@ -97,4 +110,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default connect(null, {getWaitingRoomPlayers})(App);

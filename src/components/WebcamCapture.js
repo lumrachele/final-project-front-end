@@ -60,7 +60,7 @@ class WebcamCapture extends Component {
       })
       this.props.addPhoto(this.state.pic)
     })
-  };
+  }
 
   download=(photo)=> {
     // fake server request, getting the file url as response
@@ -86,13 +86,11 @@ class WebcamCapture extends Component {
 
 
   render() {
-    const videoConstraints = {
-  width: 1280,
-  height: 720,
-  facingMode: "user"
-}
-
-
+    // const videoConstraints = {
+    //   width: 1280,
+    //   height: 720,
+    //   facingMode: "user"
+    // }
     return (
       <div>
       <Header as="h2">
@@ -115,11 +113,8 @@ class WebcamCapture extends Component {
 
           <Webcam
             audio={false}
-
             ref={this.setRef}
             screenshotFormat="image/jpeg"
-
-
           />
           <br></br>
           <Button color="orange" onClick={this.capture}>Capture photo</Button>
@@ -131,21 +126,7 @@ class WebcamCapture extends Component {
 }
 
 const mapStateToProps = (state)=>{
-  console.log(state)
   return state
 }
-//
-// const mapDispatchToProps = (dispatch)=>{
-//   return{
-//     addPhoto: ()=>{
-//       dispatch(addPhoto())
-//     }
-//   }
-// }
 
 export default withRouter(connect(mapStateToProps, { addPhoto })(WebcamCapture))
-
-// <Button onClick={this.download}>download photo</Button>
-
-
-// </a>

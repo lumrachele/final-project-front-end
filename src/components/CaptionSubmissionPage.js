@@ -27,16 +27,10 @@ class CaptionSubmissionPage extends Component {
       })
     }
     else{
-      // remove the form
       this.setState({
         showForm: false
       })
       clearInterval(this.state.timer);
-    // this.capture()
-    // // this.clearInterval(this.state.timer);
-    // this.setState({
-    //   captured: true
-    // })
     }
   }
 
@@ -98,8 +92,6 @@ class CaptionSubmissionPage extends Component {
     } else {
       alert("Your answer length must be greater than 3 characters.")
     }
-
-    //want to dispatch an action addGameCaptions
   } // end of handleSubmit
 
 
@@ -107,30 +99,30 @@ class CaptionSubmissionPage extends Component {
     this.props.history.push('/votingPage')
   }
 
-  // <ActionCable />
   render(){
     return(
       <div className={"captionSubmissionPage"}>
-      <Header size="huge">What do you think the original prompt was?</Header>
-      <Header as="h2">You have <strong>
-        {this.state.counter} s</strong> remaining.</Header>
+        <Header size="huge">What do you think the original prompt was?</Header>
+        <Header as="h2">You have <strong>{this.state.counter} s</strong> remaining.</Header>
 
-      {this.state.photo &&
-        <Image centered src={this.state.photo} alt={"hi"}/>
-      }
-    { this.showForm &&
-      <Grid textAlign='center' style={{ height: '100%' }} verticalAlign='middle'>
-            <Grid.Column style={{ maxWidth: 450 }}>
-        <Form onSubmit={this.handleSubmit} style={{ maxWidth: 450 }} >
-          <Label size="large">Enter your submissions here!</Label>
-          <br></br>
-          <input type="text" name="captionSubmission" onChange={this.handleChange}value={this.state.currentInput}/>
-          <br></br>
-          <br></br>
-          <Button secondary>Submit Answer</Button>
-        </Form>
-        </Grid.Column>
-      </Grid>}
+        {this.state.photo &&
+          <Image centered src={this.state.photo} alt={"hi"}/>
+        }
+
+        { this.showForm &&
+          <Grid textAlign='center' style={{ height: '100%' }} verticalAlign='middle'>
+                <Grid.Column style={{ maxWidth: 450 }}>
+            <Form onSubmit={this.handleSubmit} style={{ maxWidth: 450 }} >
+              <Label size="large">Enter your submissions here!</Label>
+              <br></br>
+              <input type="text" name="captionSubmission" onChange={this.handleChange}value={this.state.currentInput}/>
+              <br></br>
+              <br></br>
+              <Button secondary>Submit Answer</Button>
+            </Form>
+            </Grid.Column>
+          </Grid>
+        }
         <br></br>
         {this.props.submittedCaptions.length >= 3 &&
           <Button color="orange" onClick={this.handleClick}>Go to Voting</Button>
@@ -139,20 +131,9 @@ class CaptionSubmissionPage extends Component {
     )
   }
 }
-
 //when time is up, hide form and show go to voting
-
 const mapStateToProps = (state) =>{
   return state
 }
 
-// const mapDispatchToProps = (dispatch)=>{
-//   return {addGameCaptions: ()=>{
-//     dispatch(addGameCaptions())
-//   }}
-// }
-
-
 export default connect(mapStateToProps, { addGameCaptions })(withRouter(CaptionSubmissionPage))
-
-// <CaptionContainer/>

@@ -7,7 +7,7 @@ import { addGameCaptions } from '../actions/addGameCaptions.js'
 import { addPlayerToExistingGame } from '../actions/addPlayerToExistingGame.js'
 import WaitingRoom from './waitingRoom.js'
 import { Container, Header, Button, List, Image, Form, Label } from 'semantic-ui-react'
-import { ActionCable } from 'react-actioncable-provider'
+import { ActionCableConsumer } from 'react-actioncable-provider'
 import { onlineRules } from '../constants/rules.js'
 import {API_URL} from '../constants/constants.js'
 
@@ -15,13 +15,11 @@ class Home extends Component{
   state={
     userId: null,
     gameCode: "",
-    // gameCreated: false,
     gamePlayers: [],
     enterGame: false,
   }
   //
   componentDidMount(){
-    //from login
     this.setState({
       userId: this.props.currentUser.id
     })
@@ -38,8 +36,6 @@ class Home extends Component{
           Accept: 'application/json'
         },
         body: JSON.stringify({user_game:{
-          //will receive from login
-          // user_id: this.props.currentUser.id,
           user_id: this.props.currentUser.id,
           game_id: game.id
           }
@@ -48,14 +44,10 @@ class Home extends Component{
       .then(res=>res.json())
       .then(ug=>{
         this.props.addUserGame(ug)
-        this.setState({
-          gameCreated: true
-        })
       })
       return game
     })
     .then(game=>{
-      // console.log(game)
       fetch(API_URL+`/captions`)
       .then(res=>res.json())
       .then(captions=>{
@@ -126,6 +118,7 @@ class Home extends Component{
     .then(res=>res.json())
     .then(ug=>{
       this.props.addPlayerToExistingGame(ug.user, ug.game)
+      this.props.addUserGame(ug)
     })
     .then(()=>{
       this.displayPlayers()
@@ -139,10 +132,6 @@ class Home extends Component{
   render(){
     return(
       <div className={'ui grid' }>
-        <ActionCable
-        channel={{channel: 'HomeChannel'}}
-        onReceived={(whatIsThis)=>console.log(whatIsThis)}
-         />
          <div className='two column row'>
           <div text className={'column'}>
         {!this.state.enterGame ?
@@ -152,6 +141,7 @@ class Home extends Component{
             <br></br>
             <Header as ="h3">or</Header>
             <br></br>
+
             {<Form onSubmit={this.submitGameCode}>
               <Label>Enter Game Code to Join an Existing Game</Label>
               <Form.Input type="text" value={this.state.gameCode} onChange={this.grabGameCode} placeholder={'game code'}style={{ maxWidth: 200 }}>
@@ -159,7 +149,7 @@ class Home extends Component{
             </Form>}
           </>
           :
-            <WaitingRoom gamePlayers={this.state.gamePlayers}/>
+            <WaitingRoom />
           }
 
           </div>
@@ -169,7 +159,7 @@ class Home extends Component{
             <Header size="huge" float="right">for 3 or more players</Header>
             <List as='ol'>
               {onlineRules.split(". ").map(rule=>{
-                return <List.Item as='li' size='large'>
+                return <List.Item as='li' size='large' key={rule.index}>
                         {rule}
                       </List.Item>
               })}
@@ -183,11 +173,9 @@ class Home extends Component{
     )
   }
 }
-// if using websockets, "start game" will display a textbox underneath with the gameroom code for other users to join
 
 const mapStateToProps = (state)=>{
   return state
 }
-
 
 export default connect(mapStateToProps, { newGame, addUserGame, addGameCaptions, addPlayerToExistingGame })(withRouter(Home))

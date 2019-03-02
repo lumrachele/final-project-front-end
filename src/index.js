@@ -22,6 +22,7 @@ const defaultState = {
 }
 
 const myReducer = (state = defaultState, action) =>{
+  console.log('IN THE REDUCER', action.type);
   switch(action.type){
     case 'ADD_CURRENT_USER':
       return {
@@ -38,7 +39,7 @@ const myReducer = (state = defaultState, action) =>{
     return{
       ...state,
       players: [...state.players, action.player],
-      currentGame: action.currentGame
+      currentGame: {...action.currentGame, users: []}
     }
     case 'ADD_PHOTO':
       return {
@@ -55,7 +56,6 @@ const myReducer = (state = defaultState, action) =>{
       return {
         ...state,
         currentGame: action.game,
-        //this is a usergame
         currentPrompt: action.prompt,
         submittedCaptions:[...state.submittedCaptions, action.prompt]
       }
@@ -68,6 +68,12 @@ const myReducer = (state = defaultState, action) =>{
         lastAddedPhoto: "",
         submittedCaptions: [],
       }
+    case 'GET_WAITING_ROOM_PLAYERS':
+    console.log('ARE WE HERE?');
+    console.log({ action });
+      return{...state,
+      currentGame: action.game
+      }
     default:
       return state
   }
@@ -77,7 +83,6 @@ const store = createStore(myReducer)
 
 store.subscribe(()=> {
   console.log("current state:", store.getState())
-
   console.log("-------------------")
 })
 

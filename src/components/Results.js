@@ -9,13 +9,12 @@ import '../stylesheets/results.css'
 
 
 class Results extends Component {
-
   state={
     gameCaptions:[],
     prompt: null,
     photo: ""
   }
-  //
+
   componentDidMount(){
     this.setState({
       gameCaptions: this.props.submittedCaptions,
@@ -33,7 +32,7 @@ class Results extends Component {
     const winningText = this.sortCaptionsByPoints().slice(0,1).map(gc=> gc.caption.text)
     if (winningText===this.state.prompt){
       return (<Header.Content>
-                <Icon name='star'size="huge" /> winningText
+                winningText ⭐
               </Header.Content>)
     } else {
       return winningText
@@ -50,9 +49,7 @@ class Results extends Component {
     return(
       <div className="results">
       <Header size="large">Winner:</Header>
-      <Header size="huge" icon>
-      {this.winningCaption()}
-      </Header >
+      <Header size="huge" icon>{this.winningCaption()}</Header >
 
       <Image src={this.props.lastAddedPhoto} centered />
       <div className="table">
