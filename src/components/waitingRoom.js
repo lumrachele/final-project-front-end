@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 // import {withRouter} from 'react-router-dom'
 import { connect } from 'react-redux'
 import { Container, Header, Button, List, Image, Form, Label } from 'semantic-ui-react'
-import { ActionCable } from 'react-actioncable-provider'
+import { ActionCableConsumer } from 'react-actioncable-provider'
 import '../stylesheets/App.css'
 import {API_URL} from '../constants/constants.js'
-import { getWaitingRoomPlayers } from '../actions/getWaitingRoomPlayers.js'
+import {addPlayers} from '../actions/allActions.js'
+// import { getWaitingRoomPlayers } from '../actions/getWaitingRoomPlayers.js'
 //when a user joins a game, this will show
 //up on the page and display all of the players in the room
 // as well as a Start game button for the host when there are 3 or more players in the room
@@ -16,14 +17,22 @@ class WaitingRoom extends Component {
     // players: []
   }
 
+  componentDidMount(){
+    fetch(API_URL+`/games/${this.props.currentGame.id}`)
+    .then(res=>res.json())
+    .then(game=>{
+      // console.log("game:", game, "users:", game.users)
+      this.props.addPlayers(game)
+    })
+
+  }
+
+
   render(){
     console.log("In waitingROOM", this.props);
     return (
       <div className={'waiting-room'}>
-      <ActionCable
-          channel={{ channel: 'GamesChannel', game_id: this.props.currentGame.id  }}
-          onReceived={(receivedGame)=>{console.log('What is this now?', receivedGame)}}
-        />
+
       <Header as='h3'>
         Gameroom {this.props.currentGame && this.props.currentGame.id}
       </Header>
@@ -48,4 +57,4 @@ const mapStateToProps = (state)=>{
   return state
 }
 
-export default connect(mapStateToProps, {getWaitingRoomPlayers})(WaitingRoom)
+export default connect(mapStateToProps, {addPlayers})(WaitingRoom)

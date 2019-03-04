@@ -10,7 +10,7 @@ import { ActionCableProvider } from 'react-actioncable-provider'
 
 
 const defaultState = {
-  games: [],
+  // games: [],
   players: [],
   currentUser: null,
   currentGame: null,
@@ -28,52 +28,41 @@ const myReducer = (state = defaultState, action) =>{
       return {
         ...state,
         currentUser: action.user,
-        players: [...state.players, action.user]
-      }
-    case 'ADD_USER_GAME':
-      return {
-        ...state,
-        currentUserGame: action.usergame,
-      }
-    case 'ADD_PLAYER_TO_EXISTING_GAME':
-    return{
-      ...state,
-      players: [...state.players, action.player],
-      currentGame: {...action.currentGame, users: []}
-    }
-    case 'ADD_PHOTO':
-      return {
-        ...state,
-        photos: [...state.photos, action.photo],
-        lastAddedPhoto: action.photo
-      }
-    case 'ADD_GAME_CAPTION':
-      return {
-        ...state,
-        submittedCaptions: [...state.submittedCaptions, action.gameCaption]
       }
     case 'NEW_GAME':
       return {
         ...state,
-        currentGame: action.game,
+        currentGame: {...action.game, users: []},
         currentPrompt: action.prompt,
-        submittedCaptions:[...state.submittedCaptions, action.prompt]
+        submittedCaptions:[...state.submittedCaptions, action.prompt],
+        players: [...state.players, action.player]
       }
-    case 'ANOTHER_GAME':
-      return {...state,
-        currentGame: null,
-        currentPrompt: null,
-        currentUserGame: "",
-        photos: [],
-        lastAddedPhoto: "",
-        submittedCaptions: [],
+    // case 'PlAYER_JOIN':
+    //   return {
+    //     currentGame: action.game,
+    //     currentPrompt
+    //   }
+    case 'UPDATE_ALL_GAMES':
+      return {
+        ...state,
+        games: action.games
       }
-    case 'GET_WAITING_ROOM_PLAYERS':
-    console.log('ARE WE HERE?');
-    console.log({ action });
-      return{...state,
-      currentGame: action.game
+    case 'ADD_PLAYERS':
+      return {
+        ...state,
+        players: [...action.players]
       }
+    case 'ADD_PLAYER_ON_JOIN':
+      return{
+        ...state,
+        players: [...state.players, action.player]
+      }
+    case 'UPDATE_CURRENT_GAME':
+      return{
+        ...state,
+        currentGame: action.game
+      }
+
     default:
       return state
   }

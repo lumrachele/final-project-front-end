@@ -1,33 +1,60 @@
 import React, { Component } from 'react';
 import {withRouter} from 'react-router-dom'
 import { connect } from 'react-redux'
-import { newGame } from '../actions/newGame.js'
-import { addUserGame } from '../actions/addUserGame.js'
-import { addGameCaptions } from '../actions/addGameCaptions.js'
-import { playerJoin } from '../actions/playerJoin.js'
+// import { newGame } from '../actions/newGame.js'
+// import { addUserGame } from '../actions/addUserGame.js'
+// import { addGameCaptions } from '../actions/addGameCaptions.js'
+// import { playerJoin } from '../actions/playerJoin.js'
+import { addCurrentUser } from '../actions/addCurrentUser.js'
+import { newGame, updateAllGames, playerJoin } from '../actions/allActions.js'
 import WaitingRoom from './waitingRoom.js'
 import { Container, Header, Button, List, Image, Form, Label } from 'semantic-ui-react'
 import { ActionCableConsumer } from 'react-actioncable-provider'
 import { onlineRules } from '../constants/rules.js'
 import {API_URL} from '../constants/constants.js'
 
-class Home extends Component{
+class Home2 extends Component{
   state={
-    userId: null,
     gameCode: "",
-    gamePlayers: [],
     enterGame: false,
   }
-  //
-  componentDidMount(){
-    this.setState({
-      userId: this.props.currentUser.id
-    })
-  }
 
+  // componentDidMount(){
+  //   fetch(API_URL+`/games`)
+  //     .then(res=>res.json())
+  //     .then(games=>{
+  //       this.props.updateAllGames(games)
+  //     })
+  // }
+
+  updateUser = ()=>{
+    fetch(API_URL+`/users/${this.props.currentUser.id}`, {method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json'
+      },
+      body: JSON.stringify({user:{
+        isHost: true
+      }
+      })
+    })
+    .then(res=>res.json())
+    // .then(user=> this.props.addCurrentUser(user))
+  }
 //host
   createGame = ()=>{
-    fetch(API_URL+`/games`, {method: 'POST'})
+    this.updateUser()
+    fetch(API_URL+`/games`, {method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json'
+      }
+    })
+
+      // body: JSON.stringify({game:{
+      //   isActive: this.props.currentUser.id
+      //   }
+      // })
     .then(res=>res.json())
     .then(game=>{
       fetch(API_URL+`/user_games`, {method: 'POST',
@@ -42,9 +69,7 @@ class Home extends Component{
         })
       })
       .then(res=>res.json())
-      .then(ug=>{
-        this.props.addUserGame(ug)
-      })
+      // .then(ug=>console.log(ug))
       return game
     })
     .then(game=>{
@@ -57,19 +82,19 @@ class Home extends Component{
             'Content-Type': 'application/json',
             Accept: 'application/json'
           },
-          body: JSON.stringify({
+          body: JSON.stringify({game_caption:{
             caption_id: myPrompt.id,
             game_id: game.id
+          }
           })
         })
         .then(res=>res.json())
         .then(gc=>{
-          this.props.newGame(game,gc)
-          // this.props.history.push('/webcam') // instead, render a div below that displays all players in the game
+          this.props.newGame(game,gc,this.props.currentUser)
+
+          // this.props.newGame(game,gc)
+          // this.props.history.push('/webcam')
         })
-        // .then(()=>{
-        //     this.displayPlayers()
-        // })
         .then(()=>{
           this.setState({
             enterGame: true
@@ -79,10 +104,10 @@ class Home extends Component{
     })
   }
 
-  displayPlayers = ()=>{
-    fetch(API_URL+`/games/${this.props.currentGame.id}`)
-    .then(res=>res.json())
-  }
+  // displayPlayers = ()=>{
+  //   fetch(API_URL+`/games/${this.props.currentGame.id}`)
+  //   .then(res=>res.json())
+  // }
 
 // join as player
   grabGameCode = (event)=>{
@@ -95,14 +120,13 @@ class Home extends Component{
   submitGameCode = (event)=>{
     event.preventDefault()
     const gameId = this.state.gameCode
+
     fetch(API_URL+`/user_games`, {method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json'
       },
       body: JSON.stringify({user_game:{
-        //will receive from login
-        // user_id: this.props.currentUser.id,
         user_id: this.props.currentUser.id,
         game_id: gameId
         }
@@ -110,21 +134,33 @@ class Home extends Component{
     })
     .then(res=>res.json())
     .then(ug=>{
-      this.props.playerJoin(ug, ug.game)
-      this.props.addUserGame(ug,ug.game)
+      fetch(API_URL+`/games`)
+      .then(res=>res.json())
+      .then(games=>{
+        this.props.updateAllGames(games)
+        return games
+      })
+      .then(games=>{
+        const foundGame = this.props.games.find((game) => game.id === parseInt(gameId))
+        this.props.newGame(foundGame, foundGame.captions[0], this.props.currentUser)
+      })
+      .then(()=>{
+        this.setState({
+          enterGame: true
+        })
+      })
+      // this.props.playerJoin(ug.game)
+      // this.props.addUserGame(ug,ug.game)
     })
     .then(()=>{
-      this.displayPlayers()
-      this.setState({
-        enterGame: true
-      })
+
     })
   }
 
 
   render(){
     return(
-      <div className={'ui grid' }>
+        <div className={'ui grid' }>
          <div className='two column row'>
           <div text className={'column'}>
         {!this.state.enterGame ?
@@ -144,7 +180,6 @@ class Home extends Component{
           :
             <WaitingRoom />
           }
-
           </div>
 
           <div text className={"column"}>
@@ -171,4 +206,4 @@ const mapStateToProps = (state)=>{
   return state
 }
 
-export default connect(mapStateToProps, { newGame, addUserGame, addGameCaptions, playerJoin })(withRouter(Home))
+export default connect(mapStateToProps, { newGame, updateAllGames })(withRouter(Home2))

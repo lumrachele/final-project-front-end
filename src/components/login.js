@@ -6,6 +6,7 @@ import { init } from '../actions/init'
 import { Header, Image, Button, Grid, Form, Segment, Message } from 'semantic-ui-react'
 import '../stylesheets/login.css'
 import {API_URL} from '../constants/constants.js'
+import { ActionCableConsumer } from 'react-actioncable-provider'
 
 class Login extends Component {
   state={
@@ -32,12 +33,12 @@ class Login extends Component {
       const foundUser = users.find(user=> user.username===this.state.username)
       if (foundUser){
         this.props.addCurrentUser(foundUser)
-        this.props.history.push('/home')
       }
       else{
         alert('It looks like you do not have an account. Please sign up.')
       }
     })
+    .then(()=>{this.props.history.push('/home2')})
   }
 
   handleClick=()=>{
@@ -65,7 +66,6 @@ class Login extends Component {
   render(){
     return (
       <div className="login">
-
       <Header as="h2" icon textAlign="center">
         <Image src="http://is2.mzstatic.com/image/thumb/Purple62/v4/2b/ab/cc/2babccfc-f857-765f-4cf0-b645e6bd373c/source/175x175-75.png"/>
         <Header.Content>Oui!</Header.Content>

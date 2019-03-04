@@ -32,7 +32,7 @@ class Results extends Component {
     const winningText = this.sortCaptionsByPoints().slice(0,1).map(gc=> gc.caption.text)
     if (winningText===this.state.prompt){
       return (<Header.Content>
-                winningText ⭐
+                winningText <span role="img">⭐ </span>
               </Header.Content>)
     } else {
       return winningText
