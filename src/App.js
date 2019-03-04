@@ -26,21 +26,11 @@ class App extends Component {
   //   currentPhoto: ''
   // }
 
+
   renderPage=(page)=>{
   switch (page) {
       case 'login':
         return <Login />
-      case 'home':
-        return <>
-                  <Segment clearing>
-                  <Header as='h2' floated='right'>
-                    <Button>Log Out</Button>
-                  </Header>
-                  </Segment>
-                  <br></br>
-                  <br></br>
-                  <Home />
-                </>
       case 'home2':
         return <>
                   <Segment clearing>
@@ -52,6 +42,7 @@ class App extends Component {
                   <br></br>
                   <Home2 />
                 </>
+      //eventually want this to be referring to the gameChannel, /games/:game_id
       case 'game':
         return <>
                   <Segment clearing>
@@ -63,30 +54,30 @@ class App extends Component {
                   <br></br>
                   <Game />
                 </>
-      case 'captions':
-        return <>
-                  <Segment clearing>
-                  <Header as='h2' floated='right'>
-                    <Button> Log Out</Button>
-                  </Header>
-                  </Segment>
-                  <br></br>
-                  <br></br>
-                  <CaptionSubmissionPage />
-                </>
-      case 'voting':
-        return <>
-                  <Segment clearing>
-                  <Header as='h2' floated='right'>
-                    <Button> Log Out</Button>
-                  </Header>
-                  </Segment>
-                  <br></br>
-                  <br></br>
-                  <VotingPage />
-                </>
-      case 'results':
-        return <Results />
+      // case 'captions':
+      //   return <>
+      //             <Segment clearing>
+      //             <Header as='h2' floated='right'>
+      //               <Button> Log Out</Button>
+      //             </Header>
+      //             </Segment>
+      //             <br></br>
+      //             <br></br>
+      //             <CaptionSubmissionPage />
+      //           </>
+      // case 'voting':
+      //   return <>
+      //             <Segment clearing>
+      //             <Header as='h2' floated='right'>
+      //               <Button> Log Out</Button>
+      //             </Header>
+      //             </Segment>
+      //             <br></br>
+      //             <br></br>
+      //             <VotingPage />
+      //           </>
+      // case 'results':
+      //   return <Results />
       default:
         return(<></>)
     }
@@ -103,9 +94,7 @@ class App extends Component {
           <Route exact path={"/home"} component={()=>this.renderPage('home')}/>
           <Route exact path={"/home2"} component={()=>this.renderPage('home2')}/>
           <Route exact path={"/game"} component={()=>this.renderPage('game')}/>
-          <Route exact path={"/submitCaptions"} component={()=>this.renderPage('captions')}/>
-          <Route exact path={"/votingPage"} component={()=>this.renderPage('voting')}/>
-          <Route exact path={"/results"} component={()=>this.renderPage('results')}/>
+
         </Switch>
         </div>
       </Router>
@@ -119,3 +108,7 @@ class App extends Component {
 // }
 
 export default connect(null, { addPlayers, addPlayerOnJoin, updateCurrentGame})(App);
+
+// <Route exact path={"/submitCaptions"} component={()=>this.renderPage('captions')}/>
+// <Route exact path={"/votingPage"} component={()=>this.renderPage('voting')}/>
+// <Route exact path={"/results"} component={()=>this.renderPage('results')}/>

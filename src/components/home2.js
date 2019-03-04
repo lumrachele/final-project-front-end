@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 // import { addGameCaptions } from '../actions/addGameCaptions.js'
 // import { playerJoin } from '../actions/playerJoin.js'
 import { addCurrentUser } from '../actions/addCurrentUser.js'
-import { newGame, updateAllGames, playerJoin, updateCurrentGame, addPlayers } from '../actions/allActions.js'
+import { newGame, updateAllGames, playerJoin, updateCurrentGame, addPlayers, addHostUserGame } from '../actions/allActions.js'
 import WaitingRoom from './waitingRoom.js'
 import { Container, Header, Button, List, Image, Form, Label } from 'semantic-ui-react'
 import { ActionCableConsumer } from 'react-actioncable-provider'
@@ -39,7 +39,7 @@ class Home2 extends Component{
       })
     })
     .then(res=>res.json())
-    // .then(user=> this.props.addCurrentUser(user))
+    .then(user=> this.props.addCurrentUser(user))
   }
 //host
   createGame = ()=>{
@@ -69,7 +69,7 @@ class Home2 extends Component{
         })
       })
       .then(res=>res.json())
-      // .then(ug=>console.log(ug))
+      .then(ug=>this.props.addHostUserGame(ug))
       return game
     })
     .then(game=>{
@@ -175,10 +175,15 @@ class Home2 extends Component{
           return games
       })
       return null
-      case 'GAME_HAS_BEEN_STARTED':
-        return this.props.history.push('/game')
-      default:
-        return null
+    case 'GAME_HAS_BEEN_STARTED':
+      return this.props.history.push('/game')
+    case 'GO_TO_SUBMISSIONS':
+      console.log("hit sub from home2 page", data)
+      // this.props.history.push('/submitCaptions')
+      // this.props.statusCaptions
+      break;
+    default:
+      return null
           // here is where I am going to change the route?
     }
 
@@ -238,4 +243,4 @@ const mapStateToProps = (state)=>{
   return state
 }
 
-export default connect(mapStateToProps, { newGame, updateAllGames, updateCurrentGame, addPlayers })(withRouter(Home2))
+export default connect(mapStateToProps, { newGame, updateAllGames, updateCurrentGame, addPlayers, addCurrentUser, addHostUserGame })(withRouter(Home2))

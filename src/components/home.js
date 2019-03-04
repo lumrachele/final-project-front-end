@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {withRouter} from 'react-router-dom'
 import { connect } from 'react-redux'
 import { newGame } from '../actions/newGame.js'
-import { addUserGame } from '../actions/addUserGame.js'
+// import { addUserGame } from '../actions/addUserGame.js'
 import { addGameCaptions } from '../actions/addGameCaptions.js'
 import { playerJoin } from '../actions/playerJoin.js'
 import WaitingRoom from './waitingRoom.js'
@@ -171,4 +171,4 @@ const mapStateToProps = (state)=>{
   return state
 }
 
-export default connect(mapStateToProps, { newGame, addUserGame, addGameCaptions, playerJoin })(withRouter(Home))
+export default connect(mapStateToProps, { newGame, addGameCaptions, playerJoin })(withRouter(Home))

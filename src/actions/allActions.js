@@ -50,6 +50,22 @@ export const updateCurrentGame = (game)=>{
   }
 }
 
+export const addHostUserGame = (ug)=>{
+  return{
+    type: 'ADD_HOST_USER_GAME',
+    usergame: ug
+  }
+}
+
+export const statusCaptions = ()=>{
+  return {type: 'STATUS_CAPTIONS'}
+}
+export const statusVoting = ()=>{
+  return {type: 'STATUS_VOTING'}
+}
+export const statusResults = ()=>{
+  return {type: 'STATUS_RESULTS'}
+}
 
 
 // - currentGame

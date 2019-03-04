@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import {addGameCaptions} from '../actions/addGameCaptions.js'
+import InProgress from './inProgress.js'
 import {withRouter} from 'react-router-dom'
 import { connect } from 'react-redux'
 import { Button, Grid, Image, Header, Form, Label } from 'semantic-ui-react'
@@ -37,13 +38,13 @@ class CaptionSubmissionPage extends Component {
 
 
   componentDidMount(){
-    fetch(API_URL+`/user_games/1`)
-    .then(res=>res.json())
-    .then(userGame=>
-      this.setState({
-        photo: this.props.lastAddedPhoto
-      })
-    )
+    // fetch(API_URL+`/user_games/1`)
+    // .then(res=>res.json())
+    // .then(userGame=>
+    //   this.setState({
+    //     photo: this.props.lastAddedPhoto
+    //   })
+    // )
     let timer = setInterval(this.decrement, 1000)
     this.setState({timer})
   }
@@ -101,33 +102,42 @@ class CaptionSubmissionPage extends Component {
 
   render(){
     return(
-      <div className={"captionSubmissionPage"}>
-        <Header size="huge">What do you think the original prompt was?</Header>
-        <Header as="h2">You have <strong>{this.state.counter} s</strong> remaining.</Header>
+      <>
+        {
+          this.props.currentUser.isHost
+          ?
+          <InProgress />
+          :
 
-        {this.state.photo &&
-          <Image centered src={this.state.photo} alt={"hi"}/>
-        }
+        <div className={"captionSubmissionPage"}>
+          <Header size="huge">What do you think the original prompt was?</Header>
+          <Header as="h2">You have <strong>{this.state.counter} s</strong> remaining.</Header>
 
-        { this.showForm &&
-          <Grid textAlign='center' style={{ height: '100%' }} verticalAlign='middle'>
-                <Grid.Column style={{ maxWidth: 450 }}>
-            <Form onSubmit={this.handleSubmit} style={{ maxWidth: 450 }} >
-              <Label size="large">Enter your submissions here!</Label>
-              <br></br>
-              <input type="text" name="captionSubmission" onChange={this.handleChange}value={this.state.currentInput}/>
-              <br></br>
-              <br></br>
-              <Button secondary>Submit Answer</Button>
-            </Form>
-            </Grid.Column>
-          </Grid>
+          {this.props.lastAddedPhoto &&
+            <Image centered src={this.props.lastAddedPhoto} alt={"hi"}/>
+          }
+
+          { this.showForm &&
+            <Grid textAlign='center' style={{ height: '100%' }} verticalAlign='middle'>
+                  <Grid.Column style={{ maxWidth: 450 }}>
+              <Form onSubmit={this.handleSubmit} style={{ maxWidth: 450 }} >
+                <Label size="large">Enter your submissions here!</Label>
+                <br></br>
+                <input type="text" name="captionSubmission" onChange={this.handleChange}value={this.state.currentInput}/>
+                <br></br>
+                <br></br>
+                <Button secondary>Submit Answer</Button>
+              </Form>
+              </Grid.Column>
+            </Grid>
+          }
+          <br></br>
+          {this.props.submittedCaptions.length >= 3 &&
+            <Button color="orange" onClick={this.handleClick}>Go to Voting</Button>
+          }
+        </div>
         }
-        <br></br>
-        {this.props.submittedCaptions.length >= 3 &&
-          <Button color="orange" onClick={this.handleClick}>Go to Voting</Button>
-        }
-      </div>
+      </>
     )
   }
 }

@@ -15,11 +15,12 @@ const defaultState = {
   currentUser: null,
   currentGame: null,
   currentPrompt: null,
-  currentUserGame: "",
+  hostUserGame: "",
   photos: [],
   lastAddedPhoto: "",
   submittedCaptions: [],
-  startingGame: false
+  startingGame: false,
+  gameStatus: "prompt"
 }
 
 const myReducer = (state = defaultState, action) =>{
@@ -63,10 +64,29 @@ const myReducer = (state = defaultState, action) =>{
         ...state,
         currentGame: action.currentGame
       }
-
+    case 'ADD_HOST_USER_GAME':
+      return{
+        ...state,
+        hostUserGame: action.usergame
+      }
+    case 'STATUS_CAPTIONS':
+      return{
+        ...state,
+        gameStatus: 'captions'
+      }
+    case 'STATUS_VOTING':
+      return{
+        ...state,
+        gameStatus: 'voting'
+      }
+    case 'STATUS_RESULTS':
+      return{
+        ...state,
+        gameStatus: 'results'
+      }
     default:
       return state
-  }
+    }
 }
 
 const store = createStore(myReducer)

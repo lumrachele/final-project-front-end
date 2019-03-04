@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import Webcam from "react-webcam";
 // import ReactDOM from 'react-dom'
+import { statusCaptions } from '../actions/allActions'
 import { connect } from 'react-redux'
 import { addPhoto } from '../actions/addPhoto'
 import { withRouter } from 'react-router-dom'
@@ -43,7 +44,7 @@ class WebcamCapture extends Component {
   capture = () => {
     const imageSrc = this.webcam.getScreenshot();
 
-    fetch(API_URL+`/user_games/${this.props.currentUserGame.id}`, {method: "PATCH",
+    fetch(API_URL+`/user_games/${this.props.hostUserGame.id}`, {method: "PATCH",
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json'
@@ -80,8 +81,11 @@ class WebcamCapture extends Component {
     return this.state.pic
   }
 
-  goToSubmissions = ()=>{
-    this.props.history.push('/submitCaptions')
+  goToCaptions = ()=>{
+    fetch(API_URL+`/submissions`)
+    .then(()=>{this.props.statusCaptions()})
+    // .then(()=>this.props.history.push('/submitCaptions'))
+
   }
 
 
@@ -101,7 +105,7 @@ class WebcamCapture extends Component {
             <Image centered src={this.state.pic} alt={"hi"}/>
             <br></br>
             <br></br>
-            <Button color="orange" onClick={this.goToSubmissions}>Dispatch Photo to Gameroom</Button>
+            <Button color="orange" onClick={this.goToCaptions}>Dispatch Photo to Gameroom</Button>
             <br></br>
             <br></br>
             <a href={this.state.pic} title={this.props.currentPrompt.id} download target="_blank" rel="noopener noreferrer">
@@ -129,4 +133,4 @@ const mapStateToProps = (state)=>{
   return state
 }
 
-export default connect(mapStateToProps, { addPhoto })(WebcamCapture)
+export default connect(mapStateToProps, { addPhoto, statusCaptions })(withRouter(WebcamCapture))
