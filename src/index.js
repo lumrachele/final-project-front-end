@@ -19,6 +19,7 @@ const defaultState = {
   photos: [],
   lastAddedPhoto: "",
   submittedCaptions: [],
+  startingGame: false
 }
 
 const myReducer = (state = defaultState, action) =>{
@@ -60,7 +61,7 @@ const myReducer = (state = defaultState, action) =>{
     case 'UPDATE_CURRENT_GAME':
       return{
         ...state,
-        currentGame: action.game
+        currentGame: action.currentGame
       }
 
     default:

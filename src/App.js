@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import 'semantic-ui-css/semantic.min.css'
 import { Header, Segment, Button } from 'semantic-ui-react'
 import './stylesheets/App.css';
-import WebcamCapture from './components/WebcamCapture'
+// import WebcamCapture from './components/WebcamCapture'
+import Game from './components/game'
 import {BrowserRouter as Router, Route, Switch} from "react-router-dom"
-// import {withRouter} from 'react-router-dom'
+import {withRouter} from 'react-router-dom'
 import Login from './components/login.js'
 import Home from './components/home.js'
 import Home2 from './components/home2.js'
@@ -51,7 +52,7 @@ class App extends Component {
                   <br></br>
                   <Home2 />
                 </>
-      case 'webcam':
+      case 'game':
         return <>
                   <Segment clearing>
                   <Header as='h2' floated='right'>
@@ -60,7 +61,7 @@ class App extends Component {
                   </Segment>
                   <br></br>
                   <br></br>
-                  <WebcamCapture />
+                  <Game />
                 </>
       case 'captions':
         return <>
@@ -91,45 +92,17 @@ class App extends Component {
     }
   }
 
-  handleReceived = (data)=>{
-    // console.log("hi i received a connection", data)
-    // this.props.getWaitingRoomPlayers(theObjKeyValuePair.game)
-    switch (data.type){
-      case 'ADD_PLAYERS':
-      fetch(API_URL+`/games`)
-      .then(res=>res.json())
-      .then(games=>{
-        // console.log("game:", game, "users:", game.users)
-        this.props.updateCurrentGame(games[parseInt(games.length-1)])
-        this.props.addPlayers(games[parseInt(games.length-1)])
-        return games
-      })
-      .then(()=>{
-        this.props.addPlayerOnJoin(data.player)
-
-      })
-      // debugger
-
-    }
-
-  }
 
   render() {
     return (
       <>
-      <ActionCableConsumer
-      channel={{channel: 'HomeChannel'}}
-      onReceived={(data)=>{
-        this.handleReceived(data)
-      }}
-       />
       <Router>
       <div className="App">
         <Switch>
           <Route exact path={"/"} component={()=>this.renderPage('login')}/>
           <Route exact path={"/home"} component={()=>this.renderPage('home')}/>
           <Route exact path={"/home2"} component={()=>this.renderPage('home2')}/>
-          <Route exact path={"/webcam"} component={()=>this.renderPage('webcam')}/>
+          <Route exact path={"/game"} component={()=>this.renderPage('game')}/>
           <Route exact path={"/submitCaptions"} component={()=>this.renderPage('captions')}/>
           <Route exact path={"/votingPage"} component={()=>this.renderPage('voting')}/>
           <Route exact path={"/results"} component={()=>this.renderPage('results')}/>

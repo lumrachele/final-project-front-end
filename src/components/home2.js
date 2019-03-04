@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 // import { addGameCaptions } from '../actions/addGameCaptions.js'
 // import { playerJoin } from '../actions/playerJoin.js'
 import { addCurrentUser } from '../actions/addCurrentUser.js'
-import { newGame, updateAllGames, playerJoin } from '../actions/allActions.js'
+import { newGame, updateAllGames, playerJoin, updateCurrentGame, addPlayers } from '../actions/allActions.js'
 import WaitingRoom from './waitingRoom.js'
 import { Container, Header, Button, List, Image, Form, Label } from 'semantic-ui-react'
 import { ActionCableConsumer } from 'react-actioncable-provider'
@@ -158,9 +158,41 @@ class Home2 extends Component{
   }
 
 
+// action cable received
+
+  handleReceived = (data)=>{
+    // console.log("hi i received a connection", data)
+    // this.props.getWaitingRoomPlayers(theObjKeyValuePair.game)
+    console.log("received somethin", data);
+    switch (data.type){
+      case 'ADD_PLAYERS':
+        fetch(API_URL+`/games`)
+        .then(res=>res.json())
+        .then(games=>{
+          // console.log("game:", game, "users:", game.users)
+          this.props.updateCurrentGame(games[parseInt(games.length-1)])
+          this.props.addPlayers(games[parseInt(games.length-1)])
+          return games
+      })
+      return null
+      case 'GAME_HAS_BEEN_STARTED':
+        return this.props.history.push('/game')
+      default:
+        return null
+          // here is where I am going to change the route?
+    }
+
+  }
+
   render(){
     return(
         <div className={'ui grid' }>
+        <ActionCableConsumer
+        channel={{channel: 'HomeChannel'}}
+        onReceived={(data)=>{
+          this.handleReceived(data)
+        }}
+        />
          <div className='two column row'>
           <div text className={'column'}>
         {!this.state.enterGame ?
@@ -206,4 +238,4 @@ const mapStateToProps = (state)=>{
   return state
 }
 
-export default connect(mapStateToProps, { newGame, updateAllGames })(withRouter(Home2))
+export default connect(mapStateToProps, { newGame, updateAllGames, updateCurrentGame, addPlayers })(withRouter(Home2))

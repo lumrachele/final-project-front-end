@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-// import {withRouter} from 'react-router-dom'
+import {withRouter} from 'react-router-dom'
 import { connect } from 'react-redux'
 import { Container, Header, Button, List, Image, Form, Label } from 'semantic-ui-react'
 import { ActionCableConsumer } from 'react-actioncable-provider'
@@ -17,6 +17,14 @@ class WaitingRoom extends Component {
     // players: []
   }
 
+  handleStart=()=>{
+    // dispatch an action to set redux state gamestarted:true
+      fetch(API_URL+'/start')
+      .then(()=>{
+        this.props.history.push('/game')
+      })
+  }
+
   componentDidMount(){
     fetch(API_URL+`/games/${this.props.currentGame.id}`)
     .then(res=>res.json())
@@ -32,7 +40,12 @@ class WaitingRoom extends Component {
     console.log("In waitingROOM", this.props);
     return (
       <div className={'waiting-room'}>
-
+      <ActionCableConsumer
+      channel={{channel: 'GamesChannel'}}
+      onReceived={(data)=>{
+        console.log("the stuff", data);
+      }}
+      />
       <Header as='h3'>
         Gameroom {this.props.currentGame && this.props.currentGame.id}
       </Header>
@@ -46,7 +59,7 @@ class WaitingRoom extends Component {
         </div>
       </Container>
       {this.props.currentUser && this.props.currentUser.isHost &&
-        <Button color="orange">Start Game!</Button>
+        <Button color="orange" onClick={this.handleStart}>Start Game!</Button>
       }
       </div>
     )
@@ -57,4 +70,4 @@ const mapStateToProps = (state)=>{
   return state
 }
 
-export default connect(mapStateToProps, {addPlayers})(WaitingRoom)
+export default connect(mapStateToProps, {addPlayers})(withRouter(WaitingRoom))

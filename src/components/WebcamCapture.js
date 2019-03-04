@@ -129,4 +129,4 @@ const mapStateToProps = (state)=>{
   return state
 }
 
-export default withRouter(connect(mapStateToProps, { addPhoto })(WebcamCapture))
+export default connect(mapStateToProps, { addPhoto })(WebcamCapture)
