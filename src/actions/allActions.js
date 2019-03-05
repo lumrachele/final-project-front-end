@@ -67,6 +67,12 @@ export const statusResults = ()=>{
   return {type: 'STATUS_RESULTS'}
 }
 
+export const getPhoto = (ugPhoto)=>{
+   return {
+     type: 'GET_PHOTO',
+     photo: ugPhoto
+    }
+}
 
 // - currentGame
 // - current prompt

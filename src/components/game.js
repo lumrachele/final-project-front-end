@@ -7,7 +7,7 @@ import Results from './Results.js'
 import InProgress from './inProgress.js'
 import { connect } from 'react-redux'
 import { Container, Header, Button, List, Image, Form, Label } from 'semantic-ui-react'
-import {statusCaptions} from '../actions/allActions'
+import {statusCaptions, getPhoto} from '../actions/allActions'
 import { ActionCableConsumer } from 'react-actioncable-provider'
 
 const Game = props =>{
@@ -45,6 +45,8 @@ const Game = props =>{
       // this.props.history.push('/submitCaptions')
       props.statusCaptions()
       break;
+    case 'GET_PHOTO':
+      props.getPhoto(data.photo)
     default:
       return null
           // here is where I am going to change the route?
@@ -58,7 +60,6 @@ const Game = props =>{
       gameHandleReceived(data)
     }}
     />
-    <Header as="h1">Game page</Header>
     {renderGameStage()}
     </>
   )
@@ -68,4 +69,4 @@ const mapStateToProps = (state)=>{
   return state
 }
 
-export default connect(mapStateToProps, {statusCaptions})(withRouter(Game))
+export default connect(mapStateToProps, {statusCaptions, getPhoto})(withRouter(Game))

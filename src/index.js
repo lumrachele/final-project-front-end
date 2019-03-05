@@ -84,6 +84,11 @@ const myReducer = (state = defaultState, action) =>{
         ...state,
         gameStatus: 'results'
       }
+    case 'GET_PHOTO':
+      return{
+        ...state,
+        lastAddedPhoto: action.photo
+      }
     default:
       return state
     }
