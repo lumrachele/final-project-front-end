@@ -62,6 +62,7 @@ const myReducer = (state = defaultState, action) =>{
       }
     case 'ANOTHER_GAME':
       return {...state,
+        gameStatus: "prompt",
         currentGame: null,
         currentPrompt: null,
         currentUserGame: "",

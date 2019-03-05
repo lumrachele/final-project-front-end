@@ -54,30 +54,7 @@ class App extends Component {
                   <br></br>
                   <Game />
                 </>
-      // case 'captions':
-      //   return <>
-      //             <Segment clearing>
-      //             <Header as='h2' floated='right'>
-      //               <Button> Log Out</Button>
-      //             </Header>
-      //             </Segment>
-      //             <br></br>
-      //             <br></br>
-      //             <CaptionSubmissionPage />
-      //           </>
-      // case 'voting':
-      //   return <>
-      //             <Segment clearing>
-      //             <Header as='h2' floated='right'>
-      //               <Button> Log Out</Button>
-      //             </Header>
-      //             </Segment>
-      //             <br></br>
-      //             <br></br>
-      //             <VotingPage />
-      //           </>
-      // case 'results':
-      //   return <Results />
+
       default:
         return(<></>)
     }

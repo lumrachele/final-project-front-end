@@ -2,12 +2,13 @@ import React, { Component } from 'react';
 import {withRouter} from 'react-router-dom'
 import WebcamCapture from './WebcamCapture.js'
 import CaptionSubmissionPage from './CaptionSubmissionPage.js'
+import SubmittedCaptionCounter from './SubmittedCaptionCounter.js'
 import VotingPage from './VotingPage.js'
 import Results from './Results.js'
 import InProgress from './inProgress.js'
 import { connect } from 'react-redux'
 import { Container, Header, Button, List, Image, Form, Label } from 'semantic-ui-react'
-import {statusCaptions, getPhoto} from '../actions/allActions'
+import {statusCaptions, getPhoto, addGameCaption, statusVoting} from '../actions/allActions'
 import { ActionCableConsumer } from 'react-actioncable-provider'
 
 const Game = props =>{
@@ -21,9 +22,16 @@ const Game = props =>{
           <InProgress />
       case "captions":
         return props.currentUser.isHost ?
-              <InProgress />
+              <>
+                <InProgress />
+                <SubmittedCaptionCounter/>
+              </>
+
               :
+              <>
               <CaptionSubmissionPage />
+              <SubmittedCaptionCounter/>
+              </>
       case "voting":
         return props.currentUser.isHost ?
               <InProgress />
@@ -47,6 +55,10 @@ const Game = props =>{
       break;
     case 'GET_PHOTO':
       props.getPhoto(data.photo)
+    case 'ADDED_CAPTION':
+      props.addGameCaption(data.gameCaption)
+    case 'GO_TO_VOTING':
+      props.statusVoting()
     default:
       return null
           // here is where I am going to change the route?
@@ -69,4 +81,4 @@ const mapStateToProps = (state)=>{
   return state
 }
 
-export default connect(mapStateToProps, {statusCaptions, getPhoto})(withRouter(Game))
+export default connect(mapStateToProps, {statusCaptions, getPhoto, addGameCaption, statusVoting})(withRouter(Game))

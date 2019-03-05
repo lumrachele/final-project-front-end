@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
-import {addGameCaptions} from '../actions/addGameCaptions.js'
+// import {addGameCaptions} from '../actions/addGameCaptions.js'
+import {addGameCaption} from '../actions/allActions.js'
 import InProgress from './inProgress.js'
+import SubmittedCaptionCounter from './SubmittedCaptionCounter.js'
 import {withRouter} from 'react-router-dom'
 import { connect } from 'react-redux'
 import { Button, Grid, Image, Header, Form, Label } from 'semantic-ui-react'
@@ -58,7 +60,7 @@ class CaptionSubmissionPage extends Component {
 
   handleSubmit=(event)=>{
     event.preventDefault()
-    if(this.state.currentInput.length > 4){
+    if(this.state.currentInput.length > 3){
       fetch(API_URL+`/captions`, {method: 'POST',
         headers:{
           'Content-Type': 'application/json',
@@ -88,7 +90,7 @@ class CaptionSubmissionPage extends Component {
           })
         })
         .then(res=>res.json())
-        .then(gc=>this.props.addGameCaptions(gc))
+        // .then(gc=>this.props.addGameCaption(gc))
       })
     } else {
       alert("Your answer length must be greater than 3 characters.")
@@ -96,7 +98,9 @@ class CaptionSubmissionPage extends Component {
   } // end of handleSubmit
 
 
-  handleClick=()=>{
+  goToVoting=()=>{
+    fetch(API_URL+`/voting`)
+    .then(()=>this.props.statusVoting)
     // this.props.history.push('/votingPage')
   }
 
@@ -126,7 +130,7 @@ class CaptionSubmissionPage extends Component {
         }
         <br></br>
         {this.props.submittedCaptions.length >= 3 &&
-          <Button color="orange" onClick={this.handleClick}>Go to Voting</Button>
+          <Button color="orange" onClick={this.goToVoting}>Go to Voting</Button>
         }
       </div>)
     }
@@ -145,4 +149,4 @@ const mapStateToProps = (state) =>{
   return state
 }
 
-export default connect(mapStateToProps, { addGameCaptions })(withRouter(CaptionSubmissionPage))
+export default connect(mapStateToProps, { addGameCaption })(withRouter(CaptionSubmissionPage))

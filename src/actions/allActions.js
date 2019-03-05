@@ -74,6 +74,14 @@ export const getPhoto = (ugPhoto)=>{
     }
 }
 
+export const addGameCaption = (gameCaption)=>{
+  return{
+    type: 'ADD_GAME_CAPTION',
+    gameCaption: gameCaption
+  }
+}
+
+
 // - currentGame
 // - current prompt
 // - players

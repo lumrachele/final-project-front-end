@@ -89,6 +89,11 @@ const myReducer = (state = defaultState, action) =>{
         ...state,
         lastAddedPhoto: action.photo
       }
+    case 'ADD_GAME_CAPTION':
+      return{
+        ...state,
+        submittedCaptions: [...state.submittedCaptions, action.gameCaption]
+      }
     default:
       return state
     }

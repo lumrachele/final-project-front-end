@@ -44,9 +44,9 @@ class VotingPage extends Component {
     return shuffle(this.props.submittedCaptions)
   }
 
-  renderResults=()=>{
-    this.props.history.push('/results')
-  }
+  // renderResults=()=>{
+  //   this.props.history.push('/results')
+  // }
 
 
   render(){
@@ -66,7 +66,7 @@ class VotingPage extends Component {
         })
       }
       </List>
-      <Button color="orange" onClick={this.renderResults}>Go to results!</Button>
+      <Button color="orange" onClick={()=>{}}>Go to results!</Button>
       </>
     )
   }
