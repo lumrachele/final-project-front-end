@@ -1,5 +1,5 @@
-export const init = ()=>{
-  return{
-    type: '@@INIT'
-  }
-}
+// export const init = ()=>{
+//   return{
+//     type: '@@INIT'
+//   }
+// }

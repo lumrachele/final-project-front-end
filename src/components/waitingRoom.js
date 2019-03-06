@@ -6,7 +6,7 @@ import { ActionCableConsumer } from 'react-actioncable-provider'
 import '../stylesheets/App.css'
 import {API_URL} from '../constants/constants.js'
 import {addPlayers} from '../actions/allActions.js'
-// import { getWaitingRoomPlayers } from '../actions/getWaitingRoomPlayers.js'
+
 //when a user joins a game, this will show
 //up on the page and display all of the players in the room
 // as well as a Start game button for the host when there are 3 or more players in the room
@@ -18,8 +18,8 @@ class WaitingRoom extends Component {
   // }
 
   handleStart=()=>{
-      fetch(API_URL+'/start')
-      .then(()=>{this.props.history.push('/game')})
+    fetch(API_URL+'/start')
+    .then(()=>{this.props.history.push('/game')})
   }
 
   componentDidMount(){

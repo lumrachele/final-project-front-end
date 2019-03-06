@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 // import {addGameCaptions} from '../actions/addGameCaptions.js'
 import {addGameCaption, statusVoting} from '../actions/allActions.js'
 import InProgress from './inProgress.js'
-import SubmittedCaptionCounter from './SubmittedCaptionCounter.js'
+// import SubmittedCaptionCounter from './SubmittedCaptionCounter.js'
 import {withRouter} from 'react-router-dom'
 import { connect } from 'react-redux'
 import { Button, Grid, Image, Header, Form, Label } from 'semantic-ui-react'
@@ -15,8 +15,10 @@ class CaptionSubmissionPage extends Component {
     photo: "",
     currentInput: "",
     timer: null,
-    counter: 30,
-    showForm: true
+    counter: 45,
+    showForm: true,
+    showGoToVoting: false,
+    clickedDone: false
   }
 
   componentWillUnmount() {
@@ -31,13 +33,20 @@ class CaptionSubmissionPage extends Component {
     }
     else{
       this.setState({
-        showForm: false
+        showForm: false,
+        showGoToVoting: true,
+        clickedDone: true
       })
       clearInterval(this.state.timer);
     }
   }
 
-
+  handleDone = () =>{
+    this.setState({
+      showForm: false,
+      clickedDone: true
+    })
+  }
 
   componentDidMount(){
     // fetch(API_URL+`/user_games/1`)
@@ -60,7 +69,7 @@ class CaptionSubmissionPage extends Component {
 
   handleSubmit=(event)=>{
     event.preventDefault()
-    if(this.state.currentInput.length > 3){
+    if(this.state.currentInput.length >= 3){
       fetch(API_URL+`/captions`, {method: 'POST',
         headers:{
           'Content-Type': 'application/json',
@@ -93,7 +102,7 @@ class CaptionSubmissionPage extends Component {
         // .then(gc=>this.props.addGameCaption(gc))
       })
     } else {
-      alert("Your answer length must be greater than 3 characters.")
+      alert("Your answer length must be at least 3 characters long.")
     }
   } // end of handleSubmit
 
@@ -127,10 +136,12 @@ class CaptionSubmissionPage extends Component {
             </Grid.Column>
           </Grid>
         }
+          {this.state.showGoToVoting && <Button color="orange" onClick={this.goToVoting}>Go to Voting</Button>}
         <br></br>
-        {this.props.submittedCaptions.length >= 3 &&
-          <Button color="orange" onClick={this.goToVoting}>Go to Voting</Button>
+        {this.props.submittedCaptions.length >= 3 && !this.state.clickedDone &&
+          <Button onClick={this.handleDone}>Done</Button>
         }
+        {this.state.clickedDone && <Header as="h3">Waiting for other players' submissions... </Header>}
       </div>)
     }
   }

@@ -7,13 +7,19 @@ import VotingPage from './VotingPage.js'
 import Results from './Results.js'
 import InProgress from './inProgress.js'
 import { connect } from 'react-redux'
-import { Container, Header, Button, List, Image, Form, Label } from 'semantic-ui-react'
-import {statusCaptions, statusResults, getPhoto, addGameCaption, statusVoting, updateCurrentGame, anotherGame, replaceGC} from '../actions/allActions'
+import { Header, Button, Segment } from 'semantic-ui-react'
+import {statusCaptions, statusResults, getPhoto, addGameCaption, statusVoting, updateCurrentGame, anotherGame, replaceGC, logout} from '../actions/allActions'
 import { ActionCableConsumer } from 'react-actioncable-provider'
 import {API_URL} from '../constants/constants.js'
 
 
 const Game = props =>{
+
+  const handleLogout = ()=>{
+      props.logout()
+      props.history.push("/")
+    }
+
   const renderGameStage = () =>{
     switch(props.gameStatus){
       case "prompt":
@@ -45,6 +51,8 @@ const Game = props =>{
 
 
   const gameHandleReceived = (data)=>{
+    console.log("hopefully will be the game channel")
+    console.log("---------------------------")
     console.log("in gameHandleReceived", data)
     switch(data.type){
     case 'GAME_HAS_BEEN_STARTED':
@@ -71,6 +79,9 @@ const Game = props =>{
       return props.replaceGC(data.gameCaption)
     case 'RERENDER_GAME':
       return props.updateCurrentGame(data.game)
+    // case 'ANOTHER_GAME':
+    //   props.anotherGame()
+    //   return props.history.push('/home')
     case 'ANOTHER_GAME':
       props.anotherGame()
       return props.history.push('/home')
@@ -87,6 +98,11 @@ const Game = props =>{
       gameHandleReceived(data)
     }}
     />
+    <Segment clearing>
+      <Header as='h2' floated='right'>
+        <Button onClick={()=>handleLogout()}>Log Out</Button>
+      </Header>
+    </Segment>
     {renderGameStage()}
     </>
   )
@@ -96,4 +112,11 @@ const mapStateToProps = (state)=>{
   return state
 }
 
-export default connect(mapStateToProps, {statusCaptions, statusResults, getPhoto, addGameCaption, statusVoting, updateCurrentGame, anotherGame, replaceGC})(withRouter(Game))
+export default connect(mapStateToProps, {statusCaptions, statusResults, getPhoto, addGameCaption, statusVoting, updateCurrentGame, anotherGame, replaceGC, logout})(withRouter(Game))
+
+// <ActionCableConsumer
+// channel={{channel: 'GamesChannel', game_id: props.currentGame.id}}
+// onReceived={(data)=>{
+  //   gameHandleReceived(data)
+  // }}
+  // />

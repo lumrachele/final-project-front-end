@@ -5,6 +5,27 @@
   // randomly select
 // post request - gameCaption
 
+export const init = ()=>{
+  return{
+    type: '@@INIT'
+  }
+}
+
+
+export const addCurrentUser = (user)=>{
+  return{
+    type: 'ADD_CURRENT_USER',
+    user: user
+  }
+}
+
+export const newUser = (user)=>{
+  return{
+    type: 'NEW_GAME',
+    user: user
+  }
+}
+
 export const newGame = (game, prompt, user)=>{
   return{
     type: 'NEW_GAME',
@@ -61,9 +82,11 @@ export const addHostUserGame = (ug)=>{
 export const statusCaptions = ()=>{
   return {type: 'STATUS_CAPTIONS'}
 }
+
 export const statusVoting = ()=>{
   return {type: 'STATUS_VOTING'}
 }
+
 export const statusResults = ()=>{
   return {type: 'STATUS_RESULTS'}
 }
@@ -91,6 +114,12 @@ export const replaceGC = (gc)=>{
 export const anotherGame = ()=>{
   return{
     type: 'ANOTHER_GAME'
+  }
+}
+
+export const logout = ()=>{
+  return{
+    type: 'LOGOUT'
   }
 }
 

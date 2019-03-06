@@ -62,12 +62,12 @@ class Results extends Component {
         }
       })
     })
-    .then(()=>
-    fetch(API_URL+`/anotherGame`)
-    .then(()=>this.props.anotherGame())
-    .then(()=>this.props.history.push('/home'))
-)
-
+    .then(res=>res.json())
+    .then(()=>{
+      fetch(API_URL+`/anotherGame`)
+      .then(()=>this.props.anotherGame())
+      .then(()=>this.props.history.push('/home'))
+    })
   }
 
   render(){
@@ -80,9 +80,10 @@ class Results extends Component {
         <div className="table">
         <ResultsTable sortedResults={this.sortCaptionsByPoints()}/>
         </div>
-        <Button color="orange" onClick={this.startNewGame}>
-        START A NEW GAME
-        </Button>
+
+        {this.props.currentUser.isHost
+          &&
+          <Button color="orange" onClick={this.startNewGame}>START A NEW GAME</Button>}
       </div>
 
     )
