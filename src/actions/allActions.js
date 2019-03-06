@@ -20,12 +20,12 @@ export const addPlayers = (game)=>{
   }
 }
 
-export const addPlayerOnJoin = (user)=>{
-  return {
-    type: 'ADD_PLAYER_ON_JOIN',
-    player: user
-  }
-}
+// export const addPlayerOnJoin = (user)=>{
+//   return {
+//     type: 'ADD_PLAYER_ON_JOIN',
+//     player: user
+//   }
+// }
 //
 // export const playerJoin = (game, prompt, user)=>{
 //   return{
@@ -46,7 +46,8 @@ export const updateAllGames = (games)=>{
 export const updateCurrentGame = (game)=>{
   return{
     type: 'UPDATE_CURRENT_GAME',
-    currentGame: game
+    currentGame: game,
+    submittedCaptions: game.game_captions
   }
 }
 
@@ -80,6 +81,23 @@ export const addGameCaption = (gameCaption)=>{
     gameCaption: gameCaption
   }
 }
+export const replaceGC = (gc)=>{
+  return{
+    type: 'REPLACE_GC',
+    gameCaption: gc
+  }
+}
+
+export const anotherGame = ()=>{
+  return{
+    type: 'ANOTHER_GAME'
+  }
+}
+
+
+// export const addPromptToSubmitted = ()=>{
+//
+// }
 
 
 // - currentGame

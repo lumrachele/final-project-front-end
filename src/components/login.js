@@ -57,7 +57,6 @@ class Login extends Component {
   handleCreateNew = (event) =>{
     event.preventDefault()
     if (this.state.newUsername.length >= 3){
-      console.log("new user:", this.state.newUsername);
     } else {
       alert("username length must be greater than 2 characters.")
     }

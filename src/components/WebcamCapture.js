@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import Webcam from "react-webcam";
 // import ReactDOM from 'react-dom'
-import { statusCaptions } from '../actions/allActions'
+import { statusCaptions, getPhoto } from '../actions/allActions'
 import { connect } from 'react-redux'
-import { addPhoto } from '../actions/addPhoto'
+// import { addPhoto } from '../actions/addPhoto'
 import { withRouter } from 'react-router-dom'
 import { Header, Button, Image } from 'semantic-ui-react'
 import {API_URL} from '../constants/constants.js'
@@ -59,7 +59,7 @@ class WebcamCapture extends Component {
       this.setState({
         pic: userGame.imageUrl
       })
-      this.props.addPhoto(this.state.pic)
+      this.props.getPhoto(userGame.imageUrl)
     })
   }
 
@@ -87,7 +87,6 @@ class WebcamCapture extends Component {
     // .then(()=>this.props.history.push('/submitCaptions'))
 
   }
-
 
   render() {
     // const videoConstraints = {
@@ -121,7 +120,6 @@ class WebcamCapture extends Component {
             screenshotFormat="image/jpeg"
           />
           <br></br>
-          <Button color="orange" onClick={this.capture}>Capture photo</Button>
           </>
         }
       </div>
@@ -133,4 +131,6 @@ const mapStateToProps = (state)=>{
   return state
 }
 
-export default connect(mapStateToProps, { addPhoto, statusCaptions })(withRouter(WebcamCapture))
+export default connect(mapStateToProps, { getPhoto, statusCaptions })(withRouter(WebcamCapture))
+
+// <Button color="orange" onClick={this.capture}>Capture photo</Button>

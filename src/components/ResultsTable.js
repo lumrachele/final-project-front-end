@@ -4,6 +4,9 @@ import { Table, Icon, Grid } from 'semantic-ui-react'
 import '../stylesheets/results.css'
 
 class ResultsTable extends Component {
+  componentDidMount(){
+    
+  }
   render(){
     return(
       <Grid textAlign='center' style={{ height: '100%' }} verticalAlign='middle'>
@@ -16,6 +19,7 @@ class ResultsTable extends Component {
               return <Table.Row key={gc.id}>
                       <Table.Cell>{gc.caption.text}</Table.Cell>
                       <Table.Cell>{gc.points} points</Table.Cell>
+
                       { this.props.currentPrompt.caption.text === gc.caption.text?
                       <Table.Cell>
                       <Icon name='star' size='large' />

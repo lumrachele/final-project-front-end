@@ -91,9 +91,6 @@ class Home2 extends Component{
         .then(res=>res.json())
         .then(gc=>{
           this.props.newGame(game,gc,this.props.currentUser)
-
-          // this.props.newGame(game,gc)
-          // this.props.history.push('/webcam')
         })
         .then(()=>{
           this.setState({
@@ -103,11 +100,6 @@ class Home2 extends Component{
       })
     })
   }
-
-  // displayPlayers = ()=>{
-  //   fetch(API_URL+`/games/${this.props.currentGame.id}`)
-  //   .then(res=>res.json())
-  // }
 
 // join as player
   grabGameCode = (event)=>{
@@ -142,34 +134,25 @@ class Home2 extends Component{
       })
       .then(games=>{
         const foundGame = this.props.games.find((game) => game.id === parseInt(gameId))
-        this.props.newGame(foundGame, foundGame.captions[0], this.props.currentUser)
+        this.props.newGame(foundGame, foundGame.game_captions[0], this.props.currentUser)
       })
       .then(()=>{
         this.setState({
           enterGame: true
         })
       })
-      // this.props.playerJoin(ug.game)
-      // this.props.addUserGame(ug,ug.game)
     })
-    .then(()=>{
 
-    })
   }
 
 
 // action cable received
-
   handleReceived = (data)=>{
-    // console.log("hi i received a connection", data)
-    // this.props.getWaitingRoomPlayers(theObjKeyValuePair.game)
-    console.log("received somethin", data);
     switch (data.type){
       case 'ADD_PLAYERS':
         fetch(API_URL+`/games`)
         .then(res=>res.json())
         .then(games=>{
-          // console.log("game:", game, "users:", game.users)
           this.props.updateCurrentGame(games[parseInt(games.length-1)])
           this.props.addPlayers(games[parseInt(games.length-1)])
           return games
@@ -177,11 +160,6 @@ class Home2 extends Component{
       return null
     case 'GAME_HAS_BEEN_STARTED':
       return this.props.history.push('/game')
-    case 'GO_TO_SUBMISSIONS':
-      console.log("hit sub from home2 page", data)
-      // this.props.history.push('/submitCaptions')
-      // this.props.statusCaptions
-      break;
     default:
       return null
           // here is where I am going to change the route?

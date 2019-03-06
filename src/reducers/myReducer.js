@@ -19,7 +19,7 @@
 
 
 const myReducer = (state = defaultState, action) =>{
-  console.log('IN THE REDUCER', action.type);
+
   switch(action.type){
     case 'ADD_CURRENT_USER':
       return {
@@ -71,8 +71,6 @@ const myReducer = (state = defaultState, action) =>{
         submittedCaptions: [],
       }
     case 'GET_WAITING_ROOM_PLAYERS':
-    console.log('ARE WE HERE?');
-    console.log({ action });
       return{...state,
       currentGame: action.game
       }

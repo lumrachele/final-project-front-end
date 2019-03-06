@@ -3,22 +3,35 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import { Image, Button, List, Header } from 'semantic-ui-react'
+import { updateCurrentGame, statusResults } from '../actions/allActions.js'
 import {API_URL} from '../constants/constants.js'
 
 let pointValue = 3
 
 class VotingPage extends Component {
   state={
-    captions: [],
-    gameCaptions: []
+    // captions: [],
+    // gameCaptions: []
+    shuffledCaptions: []
   }
 
   componentDidMount(){
+    fetch(API_URL+`/games/${this.props.currentGame.id}`)
+    .then(res=>res.json())
+    .then(game=>{
+      this.props.updateCurrentGame(game)
+    })
+    .then(game=>{
+      this.setState({
+        shuffledCaptions: shuffle(this.props.submittedCaptions)
+      })
+
+    })
+
     pointValue = 3
   }
 
   handleVote = (event, gc)=>{
-
     if (pointValue > 0){
       event.target.innerText+=` ${pointValue} points `
       fetch(API_URL+`/game_captions/${gc.id}`, {method: 'PATCH',
@@ -39,18 +52,29 @@ class VotingPage extends Component {
       alert('You may only vote on your top 3 choices.')
     }
   }
-
-  shuffleCaptions = ()=>{
-    return shuffle(this.props.submittedCaptions)
-  }
-
-  // renderResults=()=>{
-  //   this.props.history.push('/results')
+  //
+  // shuffleCaptions = ()=>{
+  //   return shuffle(this.props.submittedCaptions)
   // }
 
+  goToResults = ()=>{
+    fetch(API_URL+`/results/${this.props.currentGame.id}`)
+    // fetch(API_URL+`/games/${this.props.currentGame.id}`)
+    // .then(res=>res.json())
+    // .then(game=>this.props.updateCurrentGame(game))
+    // .then(()=>{
+    //   this.setState({loaded: true})
+    // })
+    // .then(()=>{
+      // fetch(API_URL+`/results/${this.props.currentGame.id}`)
+      // .then(res=>res.json())
+      // .then(game=>this.props.updateCurrentGame(game))
+      // .then(()=>{this.props.statusResults()})
+    // })
+
+  }
 
   render(){
-    console.log(this.props.submittedCaptions)
     return(
       <>
       <Header size='huge'>TIME TO VOTE!</Header>
@@ -59,14 +83,15 @@ class VotingPage extends Component {
         <Image centered src={this.props.lastAddedPhoto} alt={"hi"}/>
       }
       <List as='ul' size='huge'>
-      {this.shuffleCaptions().map((gc)=>{
+      {
+        this.state.shuffledCaptions.map((gc)=>{
         return <List.Item as='li' key={gc.id} onClick={(event)=>this.handleVote(event, gc)}>
           {gc.caption.text}
           </List.Item>
         })
       }
       </List>
-      <Button color="orange" onClick={()=>{}}>Go to results!</Button>
+      <Button color="orange" onClick={this.goToResults}>Go to results!</Button>
       </>
     )
   }
@@ -76,4 +101,4 @@ const mapStateToProps = (state)=>{
   return state
 }
 
-export default connect(mapStateToProps)(withRouter(VotingPage))
+export default connect(mapStateToProps, {updateCurrentGame, statusResults})(withRouter(VotingPage))

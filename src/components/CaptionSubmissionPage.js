@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 // import {addGameCaptions} from '../actions/addGameCaptions.js'
-import {addGameCaption} from '../actions/allActions.js'
+import {addGameCaption, statusVoting} from '../actions/allActions.js'
 import InProgress from './inProgress.js'
 import SubmittedCaptionCounter from './SubmittedCaptionCounter.js'
 import {withRouter} from 'react-router-dom'
@@ -100,8 +100,7 @@ class CaptionSubmissionPage extends Component {
 
   goToVoting=()=>{
     fetch(API_URL+`/voting`)
-    .then(()=>this.props.statusVoting)
-    // this.props.history.push('/votingPage')
+    .then(()=>this.props.statusVoting())
   }
 
   renderCaptionStage = ()=>{
@@ -149,4 +148,4 @@ const mapStateToProps = (state) =>{
   return state
 }
 
-export default connect(mapStateToProps, { addGameCaption })(withRouter(CaptionSubmissionPage))
+export default connect(mapStateToProps, { addGameCaption, statusVoting })(withRouter(CaptionSubmissionPage))

@@ -14,7 +14,7 @@ import VotingPage from './components/VotingPage.js'
 import Results from './components/Results.js'
 import { ActionCableConsumer } from 'react-actioncable-provider'
 import { connect } from 'react-redux'
-import { addPlayers, addPlayerOnJoin, updateCurrentGame } from './actions/allActions.js'
+import { addPlayers, updateCurrentGame } from './actions/allActions.js'
 // import { getWaitingRoomPlayers } from './actions/getWaitingRoomPlayers.js'
 import {API_URL} from './constants/constants.js'
 
@@ -66,13 +66,14 @@ class App extends Component {
       <>
       <Router>
       <div className="App">
+
         <Switch>
           <Route exact path={"/"} component={()=>this.renderPage('login')}/>
-          <Route exact path={"/home"} component={()=>this.renderPage('home')}/>
           <Route exact path={"/home2"} component={()=>this.renderPage('home2')}/>
           <Route exact path={"/game"} component={()=>this.renderPage('game')}/>
 
         </Switch>
+
         </div>
       </Router>
       </>
@@ -84,7 +85,7 @@ class App extends Component {
 //   return state
 // }
 
-export default connect(null, { addPlayers, addPlayerOnJoin, updateCurrentGame})(App);
+export default connect(null, { addPlayers, updateCurrentGame})(App);
 
 // <Route exact path={"/submitCaptions"} component={()=>this.renderPage('captions')}/>
 // <Route exact path={"/votingPage"} component={()=>this.renderPage('voting')}/>

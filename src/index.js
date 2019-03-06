@@ -10,7 +10,7 @@ import { ActionCableProvider } from 'react-actioncable-provider'
 
 
 const defaultState = {
-  // games: [],
+  games: [],
   players: [],
   currentUser: null,
   currentGame: null,
@@ -37,7 +37,8 @@ const myReducer = (state = defaultState, action) =>{
         currentGame: {...action.game, users: []},
         currentPrompt: action.prompt,
         submittedCaptions:[...state.submittedCaptions, action.prompt],
-        players: [...state.players, action.player]
+        // players: [...state.players, action.player]
+        players: [action.game.users]
       }
     // case 'PlAYER_JOIN':
     //   return {
@@ -54,14 +55,21 @@ const myReducer = (state = defaultState, action) =>{
         ...state,
         players: [...action.players]
       }
-    case 'ADD_PLAYER_ON_JOIN':
-      return{
-        ...state,
-        players: [...state.players, action.player]
-      }
+    // case 'ADD_PLAYER_ON_JOIN':
+    //   return{
+    //     ...state,
+    //     players: [...state.players, action.player]
+    //   }
     case 'UPDATE_CURRENT_GAME':
       return{
         ...state,
+        games: [...state.games.map(g=>{
+          if(g.id === action.currentGame.id){
+            return action.currentGame
+          }else{
+            return g
+          }
+        })],
         currentGame: action.currentGame
       }
     case 'ADD_HOST_USER_GAME':
@@ -93,6 +101,17 @@ const myReducer = (state = defaultState, action) =>{
       return{
         ...state,
         submittedCaptions: [...state.submittedCaptions, action.gameCaption]
+      }
+    case 'REPLACE_GC':
+      return{
+        ...state,
+        submittedCaptions: [...state.submittedCaptions.map(gc=>{
+          if(gc.id === action.gameCaption.id){
+            return action.gameCaption
+          }else{
+            return gc
+          }
+        })]
       }
     default:
       return state

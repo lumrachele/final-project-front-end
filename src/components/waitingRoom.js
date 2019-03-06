@@ -13,23 +13,19 @@ import {addPlayers} from '../actions/allActions.js'
 
 
 class WaitingRoom extends Component {
-  state={
-    // players: []
-  }
+  // state={
+  //   // players: []
+  // }
 
   handleStart=()=>{
-    // dispatch an action to set redux state gamestarted:true
       fetch(API_URL+'/start')
-      .then(()=>{
-        this.props.history.push('/game')
-      })
+      .then(()=>{this.props.history.push('/game')})
   }
 
   componentDidMount(){
     fetch(API_URL+`/games/${this.props.currentGame.id}`)
     .then(res=>res.json())
     .then(game=>{
-      // console.log("game:", game, "users:", game.users)
       this.props.addPlayers(game)
     })
 
@@ -37,7 +33,6 @@ class WaitingRoom extends Component {
 
 
   render(){
-    console.log("In waitingROOM", this.props);
     return (
       <div className={'waiting-room'}>
       <ActionCableConsumer

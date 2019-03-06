@@ -1,64 +1,90 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
-import {anotherGame} from '../actions/anotherGame.js'
+import {anotherGame, updateCurrentGame} from '../actions/allActions.js'
 // import {init} from '../actions/init.js'
 import { Button, Header, Icon, Image } from 'semantic-ui-react'
 import ResultsTable from './ResultsTable.js'
+import {API_URL} from '../constants/constants.js'
+
 import '../stylesheets/results.css'
 
 
 class Results extends Component {
   state={
-    gameCaptions:[],
-    prompt: null,
-    photo: ""
+    // gameCaptions:[],
+    // prompt: null,
+    // photo: ""
+    loaded: false
   }
 
   componentDidMount(){
-    this.setState({
-      gameCaptions: this.props.submittedCaptions,
-      prompt: this.props.currentPrompt.caption.text
-    })
+    console.log("in Results componentDidMount");
+    // this.setState({
+    //   gameCaptions: this.props.submittedCaptions,
+    //   prompt: this.props.currentPrompt.caption.text
+    // })
+    // fetch(API_URL+`/games/${this.props.currentGame.id}`)
+    // .then(res=>res.json())
+    // .then(game=>this.props.updateCurrentGame(game))
+    // .then(()=>{
+    //   this.setState({loaded: true})
+    // })
+    // .then(()=>{
+    //       debugger
+    // })
+
   }
 
   sortCaptionsByPoints=()=>{
-    return this.state.gameCaptions.sort((a, b)=>{
+    return this.props.submittedCaptions.sort((a, b)=>{
       return b.points-a.points
     })
   }
 
   winningCaption=()=>{
     const winningText = this.sortCaptionsByPoints().slice(0,1).map(gc=> gc.caption.text)
-    if (winningText===this.state.prompt){
-      return (<Header.Content>
-                winningText <span role="img">⭐ </span>
-              </Header.Content>)
+    if (winningText===this.props.currentPrompt.caption.text){
+      return (<Header size="huge" icon="star" content={winningText}/>)
     } else {
-      return winningText
+      return (<Header size="huge">{winningText}</Header>)
     }
   }
 
   startNewGame=()=>{
-    this.props.anotherGame()
-    this.props.history.push('/home')
+    fetch(API_URL+`/games/${this.props.currentGame.id}`, {method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json'
+      },
+      body: JSON.stringify({game:{
+        isActive: false
+        }
+      })
+    })
+    .then(()=>
+    fetch(API_URL+`/anotherGame`)
+    .then(()=>this.props.anotherGame())
+    .then(()=>this.props.history.push('/home'))
+)
+
   }
 
   render(){
 
     return(
       <div className="results">
-      <Header size="large">Winner:</Header>
-      <Header size="huge" icon>{this.winningCaption()}</Header >
+        <Header size="large">Winner:</Header>
+        {this.winningCaption()}
+        <Image src={this.props.lastAddedPhoto} centered />
+        <div className="table">
+        <ResultsTable sortedResults={this.sortCaptionsByPoints()}/>
+        </div>
+        <Button color="orange" onClick={this.startNewGame}>
+        START A NEW GAME
+        </Button>
+      </div>
 
-      <Image src={this.props.lastAddedPhoto} centered />
-      <div className="table">
-      <ResultsTable sortedResults={this.sortCaptionsByPoints()}/>
-      </div>
-      <Button color="orange" onClick={this.startNewGame}>
-      START A NEW GAME
-      </Button>
-      </div>
     )
   }
 }
@@ -68,4 +94,4 @@ const mapStateToProps = (state)=>{
   return state
 }
 
-export default connect(mapStateToProps, { anotherGame })(withRouter(Results))
+export default connect(mapStateToProps, { anotherGame, updateCurrentGame })(withRouter(Results))
