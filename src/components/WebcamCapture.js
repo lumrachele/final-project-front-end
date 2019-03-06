@@ -1,19 +1,18 @@
 import React, { Component } from 'react'
 import Webcam from "react-webcam";
 // import ReactDOM from 'react-dom'
+import { statusCaptions, getPhoto } from '../actions/allActions'
 import { connect } from 'react-redux'
-import { addPhoto } from '../actions/addPhoto'
+// import { addPhoto } from '../actions/addPhoto'
 import { withRouter } from 'react-router-dom'
 import { Header, Button, Image } from 'semantic-ui-react'
-
-const API_URL = 'http://localhost:3000/api/v1'
+import {API_URL} from '../constants/constants.js'
 
 class WebcamCapture extends Component {
   state={
     pic:"",
     timer: null,
-    counter: 5,
-    captured: false
+    counter: 5
   };
 
   setRef = webcam => {
@@ -35,12 +34,9 @@ class WebcamCapture extends Component {
         counter: this.state.counter - 1
       })
     }
-    else{
-    // this.capture()
-    // // this.clearInterval(this.state.timer);
-    // this.setState({
-    //   captured: true
-    // })
+    else {
+    this.capture()
+    clearInterval(this.state.timer);
     }
   }
 
@@ -48,7 +44,7 @@ class WebcamCapture extends Component {
   capture = () => {
     const imageSrc = this.webcam.getScreenshot();
 
-    fetch(API_URL+`/user_games/${this.props.currentUserGame.id}`, {method: "PATCH",
+    fetch(API_URL+`/user_games/${this.props.hostUserGame.id}`, {method: "PATCH",
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json'
@@ -63,9 +59,9 @@ class WebcamCapture extends Component {
       this.setState({
         pic: userGame.imageUrl
       })
-      this.props.addPhoto(this.state.pic)
+      this.props.getPhoto(userGame.imageUrl)
     })
-  };
+  }
 
   download=(photo)=> {
     // fake server request, getting the file url as response
@@ -85,19 +81,19 @@ class WebcamCapture extends Component {
     return this.state.pic
   }
 
-  goToSubmissions = ()=>{
-    this.props.history.push('/submitCaptions')
+  goToCaptions = ()=>{
+    fetch(API_URL+`/submissions`)
+    .then(()=>{this.props.statusCaptions()})
+    // .then(()=>this.props.history.push('/submitCaptions'))
+
   }
 
-
   render() {
-    const videoConstraints = {
-  width: 1280,
-  height: 720,
-  facingMode: "user"
-}
-
-
+    // const videoConstraints = {
+    //   width: 1280,
+    //   height: 720,
+    //   facingMode: "user"
+    // }
     return (
       <div>
       <Header as="h2">
@@ -108,7 +104,7 @@ class WebcamCapture extends Component {
             <Image centered src={this.state.pic} alt={"hi"}/>
             <br></br>
             <br></br>
-            <Button color="orange" onClick={this.goToSubmissions}>Dispatch Photo to Gameroom</Button>
+            <Button color="orange" onClick={this.goToCaptions}>Dispatch Photo to Gameroom</Button>
             <br></br>
             <br></br>
             <a href={this.state.pic} title={this.props.currentPrompt.id} download target="_blank" rel="noopener noreferrer">
@@ -120,14 +116,10 @@ class WebcamCapture extends Component {
 
           <Webcam
             audio={false}
-
             ref={this.setRef}
             screenshotFormat="image/jpeg"
-
-            videoConstraints={videoConstraints}
           />
           <br></br>
-          <Button color="orange" onClick={this.capture}>Capture photo</Button>
           </>
         }
       </div>
@@ -136,21 +128,9 @@ class WebcamCapture extends Component {
 }
 
 const mapStateToProps = (state)=>{
-  console.log(state)
   return state
 }
-//
-// const mapDispatchToProps = (dispatch)=>{
-//   return{
-//     addPhoto: ()=>{
-//       dispatch(addPhoto())
-//     }
-//   }
-// }
 
-export default withRouter(connect(mapStateToProps, { addPhoto })(WebcamCapture))
+export default connect(mapStateToProps, { getPhoto, statusCaptions })(withRouter(WebcamCapture))
 
-// <Button onClick={this.download}>download photo</Button>
-
-
-// </a>
+// <Button color="orange" onClick={this.capture}>Capture photo</Button>

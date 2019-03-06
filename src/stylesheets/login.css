@@ -1,6 +1,11 @@
 .login{
   position: inherit;
   transform: translateY(50%);
+  /* background-image: linear-gradient(
+  #df0e62,
+   #fac70b); */
+  height: 100%;
+  width: auto;
 }
 
 strong:hover{
@@ -12,4 +17,17 @@ strong:hover{
   width: auto;
   border: 10px;
   border-color: solid black;
+}
+
+.oui{
+  transform: translateY(70%);
+  font-size: 10em;
+  /* text-decoration: underline; */
+  /* text-decoration-color: #fff; */
+  /* text-decoration-style: wavy; */
+  text-shadow: 5px 5px #fff;
+}
+
+.signup-form{
+  transform: translateY(100%);
 }

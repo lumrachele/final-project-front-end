@@ -1,81 +1,149 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import 'semantic-ui-css/semantic.min.css'
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { Provider } from 'react-redux'
 import { createStore } from 'redux'
-import 'semantic-ui-css/semantic.min.css'
-// import { myReducer } from './reducers/myReducer.js'
-// const API_URL = 'http://localhost:3000/api/v1/'
+import { ActionCableProvider } from 'react-actioncable-provider'
+
 
 const defaultState = {
+  games: [],
+  players: [],
   currentUser: null,
   currentGame: null,
   currentPrompt: null,
-  currentUserGame: "",
+  hostUserGame: "",
   photos: [],
   lastAddedPhoto: "",
   submittedCaptions: [],
+  startingGame: false,
+  gameStatus: "prompt"
 }
 
 const myReducer = (state = defaultState, action) =>{
+  console.log('IN THE REDUCER', action.type);
   switch(action.type){
     case 'ADD_CURRENT_USER':
       return {
         ...state,
-        currentUser: action.user
-      }
-    case 'ADD_USER_GAME':
-      return {
-        ...state,
-        currentUserGame: action.usergame
-      }
-    case 'ADD_PHOTO':
-      return {
-        ...state,
-        photos: [...state.photos, action.photo],
-        lastAddedPhoto: action.photo
-      }
-    case 'ADD_GAME_CAPTION':
-      return {
-        ...state,
-        submittedCaptions: [...state.submittedCaptions, action.gameCaption]
+        currentUser: action.user,
       }
     case 'NEW_GAME':
       return {
         ...state,
-        currentGame: action.game,
-        //this is a usergame
+        currentGame: {...action.game, users: []},
         currentPrompt: action.prompt,
-        submittedCaptions:[...state.submittedCaptions, action.prompt]
+        submittedCaptions:[...state.submittedCaptions, action.prompt],
+        // players: [...state.players, action.player]
+        players: [action.game.users]
+      }
+    // case 'PlAYER_JOIN':
+    //   return {
+    //     currentGame: action.game,
+    //     currentPrompt
+    //   }
+    case 'UPDATE_ALL_GAMES':
+      return {
+        ...state,
+        games: action.games
+      }
+    case 'ADD_PLAYERS':
+      return {
+        ...state,
+        players: [...action.players]
+      }
+    // case 'ADD_PLAYER_ON_JOIN':
+    //   return{
+    //     ...state,
+    //     players: [...state.players, action.player]
+    //   }
+    case 'UPDATE_CURRENT_GAME':
+      return{
+        ...state,
+        games: [...state.games.map(g=>{
+          if(g.id === action.currentGame.id){
+            return action.currentGame
+          }else{
+            return g
+          }
+        })],
+        currentGame: action.currentGame
+      }
+    case 'ADD_HOST_USER_GAME':
+      return{
+        ...state,
+        hostUserGame: action.usergame
+      }
+    case 'STATUS_CAPTIONS':
+      return{
+        ...state,
+        gameStatus: 'captions'
+      }
+    case 'STATUS_VOTING':
+      return{
+        ...state,
+        gameStatus: 'voting'
+      }
+    case 'STATUS_RESULTS':
+      return{
+        ...state,
+        gameStatus: 'results'
+      }
+    case 'GET_PHOTO':
+      return{
+        ...state,
+        lastAddedPhoto: action.photo
+      }
+    case 'ADD_GAME_CAPTION':
+      return{
+        ...state,
+        submittedCaptions: [...state.submittedCaptions, action.gameCaption]
+      }
+    case 'REPLACE_GC':
+      return{
+        ...state,
+        submittedCaptions: [...state.submittedCaptions.map(gc=>{
+          if(gc.id === action.gameCaption.id){
+            return action.gameCaption
+          }else{
+            return gc
+          }
+        })]
       }
     case 'ANOTHER_GAME':
-      return {...state,
-        currentGame: null,
-        currentPrompt: null,
-        currentUserGame: "",
-        photos: [],
-        lastAddedPhoto: "",
-        submittedCaptions: [],
-      }
+        return {
+          ...state,
+          gameStatus: "prompt",
+          currentGame: null,
+          currentPrompt: null,
+          currentUserGame: "",
+          photos: [],
+          lastAddedPhoto: "",
+          submittedCaptions: [],
+        }
+    // case 'LOGOUT':
+    //   return this.props.init()
     default:
       return state
-  }
+    }
 }
 
 const store = createStore(myReducer)
 
 store.subscribe(()=> {
   console.log("current state:", store.getState())
-
   console.log("-------------------")
 })
 
 ReactDOM.render(
-    <Provider store={store}>
-    <App />
-    </Provider>
+  <ActionCableProvider url="ws://localhost:3000/api/v1/cable">
+      <Provider store={store}>
+        <App />
+      </Provider>
+    </ActionCableProvider>
   , document.getElementById('root'));
 
 serviceWorker.unregister();

@@ -1,5 +1,8 @@
 .App {
   text-align: center;
+  /* background-image: linear-gradient(
+  #df0e62,
+   #fac70b); */
 }
 
 /* .App-logo {
@@ -43,4 +46,9 @@
   float: left;
   align-items: center;
   transform: translateX(20%);
+}
+
+.waiting-room{
+  border-radius: 10px;
+  border-style: solid black;
 }

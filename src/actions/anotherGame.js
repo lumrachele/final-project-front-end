@@ -1,5 +1,5 @@
-export const anotherGame = ()=>{
-  return{
-    type: 'ANOTHER_GAME'
-  }
-}
+// export const anotherGame = ()=>{
+//   return{
+//     type: 'ANOTHER_GAME'
+//   }
+// }

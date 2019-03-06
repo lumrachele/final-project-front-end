@@ -2,25 +2,21 @@ import React, { Component } from 'react';
 import 'semantic-ui-css/semantic.min.css'
 import { Header, Segment, Button } from 'semantic-ui-react'
 import './stylesheets/App.css';
-// import ReactDOM from 'react-dom';
-import WebcamCapture from './components/WebcamCapture'
-// import Webcam from "react-webcam";
-// import { createStore } from "redux"
+// import WebcamCapture from './components/WebcamCapture'
+import Game from './components/game'
 import {BrowserRouter as Router, Route, Switch} from "react-router-dom"
-// import {withRouter} from 'react-router-dom'
 import Login from './components/login.js'
 import Home from './components/home.js'
 import CaptionSubmissionPage from './components/CaptionSubmissionPage.js'
 import VotingPage from './components/VotingPage.js'
 import Results from './components/Results.js'
+import { ActionCableConsumer } from 'react-actioncable-provider'
+import { connect } from 'react-redux'
+import { addPlayers, updateCurrentGame } from './actions/allActions.js'
+import {API_URL} from './constants/constants.js'
 
-// const API_URL = 'http://localhost:3000/api/v1'
 
 class App extends Component {
-  state={
-    photos:[],
-    currentPhoto: ''
-  }
 
   renderPage=(page)=>{
   switch (page) {
@@ -28,73 +24,49 @@ class App extends Component {
         return <Login />
       case 'home':
         return <>
-                  <Segment clearing>
-                  <Header as='h2' floated='right'>
-                    <Button> Log Out</Button>
-                  </Header>
-                  </Segment>
                   <br></br>
                   <br></br>
-                  <Home />
+                  <Home/>
                 </>
-      case 'webcam':
+      //eventually want this to be referring to the gameChannel, /games/:game_id
+      case 'game':
         return <>
-                  <Segment clearing>
-                  <Header as='h2' floated='right'>
-                    <Button> Log Out</Button>
-                  </Header>
-                  </Segment>
                   <br></br>
                   <br></br>
-                  <WebcamCapture />
+                  <Game/>
                 </>
-      case 'captions':
-        return <>
-                  <Segment clearing>
-                  <Header as='h2' floated='right'>
-                    <Button> Log Out</Button>
-                  </Header>
-                  </Segment>
-                  <br></br>
-                  <br></br>
-                  <CaptionSubmissionPage />
-                </>
-      case 'voting':
-        return <>
-                  <Segment clearing>
-                  <Header as='h2' floated='right'>
-                    <Button> Log Out</Button>
-                  </Header>
-                  </Segment>
-                  <br></br>
-                  <br></br>
-                  <VotingPage />
-                </>
-      case 'results':
-        return <Results />
+
       default:
         return(<></>)
     }
   }
+
 
   render() {
     return (
       <>
       <Router>
       <div className="App">
+
         <Switch>
           <Route exact path={"/"} component={()=>this.renderPage('login')}/>
           <Route exact path={"/home"} component={()=>this.renderPage('home')}/>
-          <Route exact path={"/webcam"} component={()=>this.renderPage('webcam')}/>
-          <Route exact path={"/submitCaptions"} component={()=>this.renderPage('captions')}/>
-          <Route exact path={"/votingPage"} component={()=>this.renderPage('voting')}/>
-          <Route exact path={"/results"} component={()=>this.renderPage('results')}/>
+          <Route exact path={"/game"} component={()=>this.renderPage('game')}/>
         </Switch>
+
         </div>
       </Router>
       </>
     );
   }
 }
+//
+// const mapStateToProps = (state)=>{
+//   return state
+// }
 
-export default App;
+export default connect(null, { addPlayers, updateCurrentGame})(App);
+
+// <Route exact path={"/submitCaptions"} component={()=>this.renderPage('captions')}/>
+// <Route exact path={"/votingPage"} component={()=>this.renderPage('voting')}/>
+// <Route exact path={"/results"} component={()=>this.renderPage('results')}/>

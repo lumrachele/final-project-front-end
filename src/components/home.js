@@ -1,28 +1,65 @@
 import React, { Component } from 'react';
 import {withRouter} from 'react-router-dom'
 import { connect } from 'react-redux'
-import { newGame } from '../actions/newGame.js'
-import { addUserGame } from '../actions/addUserGame.js'
-import { addGameCaptions } from '../actions/addGameCaptions.js'
-import { Container, Header, Button, List, Image } from 'semantic-ui-react'
-
-const API_URL = 'http://localhost:3000/api/v1'
+// import { newGame } from '../actions/newGame.js'
+// import { addUserGame } from '../actions/addUserGame.js'
+// import { addGameCaptions } from '../actions/addGameCaptions.js'
+// import { playerJoin } from '../actions/playerJoin.js'
+// import { addCurrentUser } from '../actions/addCurrentUser.js'
+import { addCurrentUser, newGame, updateAllGames, playerJoin, updateCurrentGame, addPlayers, addHostUserGame, anotherGame, logout } from '../actions/allActions.js'
+import WaitingRoom from './waitingRoom.js'
+import { Container, Header, Button, List, Image, Form, Label, Segment} from 'semantic-ui-react'
+import { ActionCableConsumer } from 'react-actioncable-provider'
+import { onlineRules } from '../constants/rules.js'
+import {API_URL} from '../constants/constants.js'
 
 class Home extends Component{
   state={
-    userId: ""
+    gameCode: "",
+    enterGame: false,
   }
-  //
-  componentDidMount(){
-    //from login
-    this.setState({
-      userId: this.props.currentUser.id
+
+  // componentDidMount(){
+  //   fetch(API_URL+`/games`)
+  //     .then(res=>res.json())
+  //     .then(games=>{
+  //       this.props.updateAllGames(games)
+  //     })
+  // }
+
+  handleLogout = ()=>{
+    this.props.logout()
+    this.props.history.push("/")
+  }
+
+  updateUser = ()=>{
+    fetch(API_URL+`/users/${this.props.currentUser.id}`, {method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json'
+      },
+      body: JSON.stringify({user:{
+        isHost: true
+      }
+      })
+    })
+    .then(res=>res.json())
+    .then(user=> this.props.addCurrentUser(user))
+  }
+//host
+  createGame = ()=>{
+    this.updateUser()
+    fetch(API_URL+`/games`, {method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json'
+      }
     })
 
-  }
-
-  handleClick = ()=>{
-    fetch(API_URL+`/games`, {method: 'POST'})
+      // body: JSON.stringify({game:{
+      //   isActive: this.props.currentUser.id
+      //   }
+      // })
     .then(res=>res.json())
     .then(game=>{
       fetch(API_URL+`/user_games`, {method: 'POST',
@@ -31,22 +68,16 @@ class Home extends Component{
           Accept: 'application/json'
         },
         body: JSON.stringify({user_game:{
-          //will receive from login
-          // user_id: this.props.currentUser.id,
           user_id: this.props.currentUser.id,
           game_id: game.id
           }
         })
       })
       .then(res=>res.json())
-      .then(ug=>{
-        this.props.addUserGame(ug)
-      })
+      .then(ug=>this.props.addHostUserGame(ug))
       return game
-
     })
     .then(game=>{
-      // console.log(game)
       fetch(API_URL+`/captions`)
       .then(res=>res.json())
       .then(captions=>{
@@ -56,80 +87,152 @@ class Home extends Component{
             'Content-Type': 'application/json',
             Accept: 'application/json'
           },
-          body: JSON.stringify({
+          body: JSON.stringify({game_caption:{
             caption_id: myPrompt.id,
             game_id: game.id
+          }
           })
         })
         .then(res=>res.json())
         .then(gc=>{
-          this.props.newGame(game,gc)
-          this.props.history.push('/webcam')
+          this.props.newGame(game,gc,this.props.currentUser)
+        })
+        .then(()=>{
+          this.setState({
+            enterGame: true
+          })
+        })
+      })
+    })
+  }
+
+// join as player
+  grabGameCode = (event)=>{
+    this.setState({
+      gameCode: event.target.value
+    })
+  }
+
+//creates a new userGame for a player that joins a game
+  submitGameCode = (event)=>{
+    event.preventDefault()
+    const gameId = this.state.gameCode
+
+    fetch(API_URL+`/user_games`, {method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json'
+      },
+      body: JSON.stringify({user_game:{
+        user_id: this.props.currentUser.id,
+        game_id: gameId
+        }
+      })
+    })
+    .then(res=>res.json())
+    .then(ug=>{
+      fetch(API_URL+`/games`)
+      .then(res=>res.json())
+      .then(games=>{
+        this.props.updateAllGames(games)
+        return games
+      })
+      .then(games=>{
+        const foundGame = this.props.games.find((game) => game.id === parseInt(gameId))
+        this.props.newGame(foundGame, foundGame.game_captions[0], this.props.currentUser)
+      })
+      .then(()=>{
+        this.setState({
+          enterGame: true
         })
       })
     })
 
   }
 
-// i need to fetch all captions, then randomly choose
-// one to assign when creating a new gamecaption
 
+// action cable received
+  handleReceived = (data)=>{
+    console.log("receiving on home channel:", data)
+    switch (data.type){
+      case 'ADD_PLAYERS':
+        fetch(API_URL+`/games`)
+        .then(res=>res.json())
+        .then(games=>{
+          this.props.updateCurrentGame(games[parseInt(games.length-1)])
+          this.props.addPlayers(games[parseInt(games.length-1)])
+          return games
+      })
+      return null
+    case 'GAME_HAS_BEEN_STARTED':
+      return this.props.history.push('/game')
+    case 'ANOTHER_GAME':
+      this.props.anotherGame()
+      return this.props.history.push('/home')
+    default:
+      return null
+          // here is where I am going to change the route?
+    }
 
+  }
 
   render(){
     return(
-      <>
-      <Container text className={'rules'}>
-      <Header as ="h1">Welcome!</Header>
+        <div className={'ui grid' }>
+        <ActionCableConsumer
+        channel={{channel: 'HomeChannel'}}
+        onReceived={(data)=>{
+          this.handleReceived(data)
+        }}
+        />
 
-      <Header as ="h3" float="right">
-        in-person version -> one computer
-      </Header>
-      <Image centered src="https://media3.giphy.com/media/OFcP2ojNIAkec/giphy.gif?cid=3640f6095c75a70342574d766fce6c67"/>
-      <br></br>
-      <Image centered src="https://media.giphy.com/media/KQLQGy30Hk5S8/giphy.gif"/>
-      </Container>
-      <Container text className={"gameplay"}>
-      <Header size="huge" float="right">
-        Game Play
-      </Header>
-      <Header size="huge" float="right">
-        for 3+ players
-      </Header>
-      <List as='ol'>
-      <List.Item as='li' size='large'>
-        The youngest person in the room starts off as the host.
-      </List.Item>
-      <List.Item as='li' size='large'>
-        All players except the host will close their eyes.
-      </List.Item>
-      <List.Item as='li' size='large'>
-        When the host clicks 'Start Game', he or she will be shown a prompt. The host will have 5 seconds to pose before the picture is taken.
-      </List.Item>
-      <List.Item as='li' size='large'>
-        The picture is sent to the game room for caption submission.
-      </List.Item>
-      <List.Item as='li' size='large'>
-        Each player will take turns with the computer and submit their answers individually. They can submit as many answers as they like until the time is up.
-      </List.Item>
-      <List.Item as='li' size='large'>
-        It's time to vote. All players (except the host) can decide as a group which captions are the Top 3 closest to the original prompt. The original prompt is hiding somewhere amongst the submitted answers.
-      </List.Item>
-      <List.Item as='li' size='large'>
-        The results are in, and the original prompt is revealed!
-      </List.Item>
-      </List>
-      <Button color="orange" onClick={this.handleClick}>START A NEW GAME!</Button>
-      </Container>
-      </>
+          <Header as='h2' floated='right'>
+            <Button className={"ui right floated button"} onClick={this.handleLogout}>Log Out</Button>
+          </Header>
+
+         <div className='two column row'>
+          <div text className={'column'}>
+        {!this.state.enterGame ?
+          <>
+            <Header as ="h1">Welcome {this.props.currentUser.username}!</Header>
+            <Button secondary className={"huge"} onClick={this.createGame}>Create New Game</Button>
+            <br></br>
+            <Header as ="h3">or</Header>
+            <br></br>
+
+            {<Form onSubmit={this.submitGameCode}>
+              <h3>Enter Game Code to Join an Existing Game</h3>
+              <Form.Input type="text" value={this.state.gameCode} onChange={this.grabGameCode} placeholder={'game code'}style={{ maxWidth: 200 }}>
+              </Form.Input>
+            </Form>}
+          </>
+          :
+            <WaitingRoom />
+          }
+          </div>
+
+          <div text className={"column"}>
+            <Header size="huge" float="right">Game Play</Header>
+            <Header size="huge" float="right">for 3 or more players</Header>
+            <List as='ol'>
+              {onlineRules.split(". ").map(rule=>{
+                return <List.Item as='li' size='large' key={rule.index}>
+                        {rule}
+                      </List.Item>
+              })}
+            </List>
+            <Image centered src="https://media3.giphy.com/media/OFcP2ojNIAkec/giphy.gif?cid=3640f6095c75a70342574d766fce6c67"/>
+            <br></br>
+            <Image centered src="https://media.giphy.com/media/KQLQGy30Hk5S8/giphy.gif"/>
+          </div>
+        </div>
+      </div>
     )
   }
 }
-// if using websockets, "start game" will display a textbox underneath with the gameroom code for other users to join
 
 const mapStateToProps = (state)=>{
   return state
 }
 
-
-export default connect(mapStateToProps, { newGame, addUserGame, addGameCaptions })(withRouter(Home))
+export default connect(mapStateToProps, { newGame, updateAllGames, updateCurrentGame, addPlayers, addCurrentUser, addHostUserGame, anotherGame, logout })(withRouter(Home))

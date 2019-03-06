@@ -1,12 +1,13 @@
 import React, { Component } from 'react'
-import {addGameCaptions} from '../actions/addGameCaptions.js'
+// import {addGameCaptions} from '../actions/addGameCaptions.js'
+import {addGameCaption, statusVoting} from '../actions/allActions.js'
+import InProgress from './inProgress.js'
+// import SubmittedCaptionCounter from './SubmittedCaptionCounter.js'
 import {withRouter} from 'react-router-dom'
 import { connect } from 'react-redux'
 import { Button, Grid, Image, Header, Form, Label } from 'semantic-ui-react'
-
-// import CaptionContainer from './CaptionContainer'
-
-const API_URL = 'http://localhost:3000/api/v1'
+import { ActionCable } from 'react-actioncable-provider'
+import {API_URL} from '../constants/constants.js'
 
 
 class CaptionSubmissionPage extends Component {
@@ -14,9 +15,11 @@ class CaptionSubmissionPage extends Component {
     photo: "",
     currentInput: "",
     timer: null,
-    counter: 20,
+    counter: 45,
+    showForm: true,
+    showGoToVoting: false,
+    clickedDone: false
   }
-
 
   componentWillUnmount() {
     clearInterval(this.state.timer);
@@ -29,24 +32,30 @@ class CaptionSubmissionPage extends Component {
       })
     }
     else{
-    // this.capture()
-    // // this.clearInterval(this.state.timer);
-    // this.setState({
-    //   captured: true
-    // })
+      this.setState({
+        showForm: false,
+        showGoToVoting: true,
+        clickedDone: true
+      })
+      clearInterval(this.state.timer);
     }
   }
 
-
+  handleDone = () =>{
+    this.setState({
+      showForm: false,
+      clickedDone: true
+    })
+  }
 
   componentDidMount(){
-    fetch(API_URL+`/user_games/1`)
-    .then(res=>res.json())
-    .then(userGame=>
-      this.setState({
-        photo: this.props.lastAddedPhoto
-      })
-    )
+    // fetch(API_URL+`/user_games/1`)
+    // .then(res=>res.json())
+    // .then(userGame=>
+    //   this.setState({
+    //     photo: this.props.lastAddedPhoto
+    //   })
+    // )
     let timer = setInterval(this.decrement, 1000)
     this.setState({timer})
   }
@@ -60,7 +69,7 @@ class CaptionSubmissionPage extends Component {
 
   handleSubmit=(event)=>{
     event.preventDefault()
-    if(this.state.currentInput.length > 4){
+    if(this.state.currentInput.length >= 3){
       fetch(API_URL+`/captions`, {method: 'POST',
         headers:{
           'Content-Type': 'application/json',
@@ -90,64 +99,64 @@ class CaptionSubmissionPage extends Component {
           })
         })
         .then(res=>res.json())
-        .then(gc=>this.props.addGameCaptions(gc))
+        // .then(gc=>this.props.addGameCaption(gc))
       })
     } else {
-      alert("Your answer length must be greater than 3 characters.")
+      alert("Your answer length must be at least 3 characters long.")
     }
-
-    //want to dispatch an action addGameCaptions
   } // end of handleSubmit
 
 
-  handleClick=()=>{
-    this.props.history.push('/votingPage')
+  goToVoting=()=>{
+    fetch(API_URL+`/voting`)
+    .then(()=>this.props.statusVoting())
+  }
+
+  renderCaptionStage = ()=>{
+    if(this.props.currentUser.isHost){
+      return <InProgress />
+    } else {
+      return(
+      <div className={"captionSubmissionPage"}>
+        <Header size="huge">What do you think the original prompt was?</Header>
+        <Header as="h2">You have <strong>{this.state.counter} s</strong> remaining.</Header>
+          <Image centered src={this.props.lastAddedPhoto} alt={"hi"}/>
+
+        { this.state.showForm &&
+          <Grid textAlign='center' style={{ height: '100%' }} verticalAlign='middle'>
+                <Grid.Column style={{ maxWidth: 450 }}>
+            <Form onSubmit={this.handleSubmit} style={{ maxWidth: 450 }} >
+              <Label size="large">Enter your submissions here!</Label>
+              <br></br>
+              <input type="text" name="captionSubmission" onChange={this.handleChange}value={this.state.currentInput}/>
+              <br></br>
+              <br></br>
+              <Button secondary>Submit Answer</Button>
+            </Form>
+            </Grid.Column>
+          </Grid>
+        }
+          {this.state.showGoToVoting && <Button color="orange" onClick={this.goToVoting}>Go to Voting</Button>}
+        <br></br>
+        {this.props.submittedCaptions.length >= 3 && !this.state.clickedDone &&
+          <Button onClick={this.handleDone}>Done</Button>
+        }
+        {this.state.clickedDone && <Header as="h3">Waiting for other players' submissions... </Header>}
+      </div>)
+    }
   }
 
   render(){
     return(
-      <div className={"captionSubmissionPage"}>
-      <Header size="huge">What do you think the original prompt was?</Header>
-      <Header as="h2">You have <strong>
-        {this.state.counter} s</strong> remaining.</Header>
-
-      {this.state.photo &&
-        <Image centered src={this.state.photo} alt={"hi"}/>
-      }
-      <Grid textAlign='center' style={{ height: '100%' }} verticalAlign='middle'>
-            <Grid.Column style={{ maxWidth: 450 }}>
-        <Form onSubmit={this.handleSubmit} style={{ maxWidth: 450 }} >
-          <Label size="large">Enter your submissions here!</Label>
-          <br></br>
-          <input type="text" name="captionSubmission" onChange={this.handleChange}value={this.state.currentInput}/>
-          <br></br>
-          <br></br>
-          <Button secondary>Submit Answer</Button>
-        </Form>
-        </Grid.Column>
-      </Grid>
-        <br></br>
-        {this.props.submittedCaptions.length >= 3 &&
-          <Button color="orange" onClick={this.handleClick}>Go to Voting</Button>
-        }
-      </div>
+      <>
+        {this.renderCaptionStage()}
+      </>
     )
   }
 }
-
 //when time is up, hide form and show go to voting
-
 const mapStateToProps = (state) =>{
   return state
 }
 
-// const mapDispatchToProps = (dispatch)=>{
-//   return {addGameCaptions: ()=>{
-//     dispatch(addGameCaptions())
-//   }}
-// }
-
-
-export default connect(mapStateToProps, { addGameCaptions })(withRouter(CaptionSubmissionPage))
-
-// <CaptionContainer/>
+export default connect(mapStateToProps, { addGameCaption, statusVoting })(withRouter(CaptionSubmissionPage))
