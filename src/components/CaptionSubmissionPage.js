@@ -126,7 +126,7 @@ class CaptionSubmissionPage extends Component {
           <Grid textAlign='center' style={{ height: '100%' }} verticalAlign='middle'>
                 <Grid.Column style={{ maxWidth: 450 }}>
             <Form onSubmit={this.handleSubmit} style={{ maxWidth: 450 }} >
-              <Label size="large">Enter your submissions here!</Label>
+              <p size="large">Enter your submissions here!</p>
               <br></br>
               <input type="text" name="captionSubmission" onChange={this.handleChange}value={this.state.currentInput}/>
               <br></br>
@@ -136,7 +136,7 @@ class CaptionSubmissionPage extends Component {
             </Grid.Column>
           </Grid>
         }
-          {this.state.showGoToVoting && <Button color="orange" onClick={this.goToVoting}>Go to Voting</Button>}
+          {this.state.showGoToVoting && <Button secondary onClick={this.goToVoting}>Go to Voting</Button>}
         <br></br>
         {this.props.submittedCaptions.length >= 3 && !this.state.clickedDone &&
           <Button onClick={this.handleDone}>Done</Button>

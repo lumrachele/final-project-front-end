@@ -36,7 +36,6 @@ const myReducer = (state = defaultState, action) =>{
         ...state,
         currentGame: {...action.game, users: []},
         currentPrompt: action.prompt,
-        submittedCaptions:[...state.submittedCaptions, action.prompt],
         // players: [...state.players, action.player]
         players: [action.game.users]
       }

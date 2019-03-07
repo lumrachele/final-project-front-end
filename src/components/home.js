@@ -195,7 +195,7 @@ class Home extends Component{
         {!this.state.enterGame ?
           <>
             <Header as ="h1">Welcome {this.props.currentUser.username}!</Header>
-            <Button secondary className={"huge"} onClick={this.createGame}>Create New Game</Button>
+            <Button secondary className={"huge"} onClick={this.createGame}>Host A New Game</Button>
             <br></br>
             <Header as ="h3">or</Header>
             <br></br>

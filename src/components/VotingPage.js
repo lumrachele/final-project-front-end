@@ -2,7 +2,7 @@ import shuffle from 'shuffle-array'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
-import { Image, Button, List, Header } from 'semantic-ui-react'
+import { Image, Button, Grid, Header } from 'semantic-ui-react'
 import { updateCurrentGame, statusResults } from '../actions/allActions.js'
 import {API_URL} from '../constants/constants.js'
 
@@ -82,15 +82,17 @@ class VotingPage extends Component {
       {this.props.lastAddedPhoto &&
         <Image centered src={this.props.lastAddedPhoto} alt={"hi"}/>
       }
-      <List as='ul' size='huge'>
-      {
-        this.state.shuffledCaptions.map((gc)=>{
-        return <List.Item as='li' key={gc.id} onClick={(event)=>this.handleVote(event, gc)}>
-          {gc.caption.text}
-          </List.Item>
-        })
-      }
-      </List>
+      <Grid textAlign='center' style={{ height: '100%' }} verticalAlign='middle'>
+        <Grid.Column style={{ maxWidth: 450 }}>
+        {this.state.shuffledCaptions.map((gc)=>{
+          return <div class="ui card" key={gc.id} onClick={(event)=>this.handleVote(event, gc)}>
+            <p>{gc.caption.text}</p>
+            </div>
+          })
+        }
+        </Grid.Column>
+      </Grid>
+
       <Button color="orange" onClick={this.goToResults}>Go to results!</Button>
       </>
     )

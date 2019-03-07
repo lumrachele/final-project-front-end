@@ -42,14 +42,14 @@ class Results extends Component {
     })
   }
 
-  winningCaption=()=>{
-    const winningText = this.sortCaptionsByPoints().slice(0,1).map(gc=> gc.caption.text)
-    if (winningText===this.props.currentPrompt.caption.text){
-      return (<Header size="huge" icon="star" content={winningText}/>)
-    } else {
-      return (<Header size="huge">{winningText}</Header>)
-    }
-  }
+  // winningCaption=()=>{
+  //   const winningText = this.sortCaptionsByPoints().map(gc=> gc.caption.text)
+  //   if (winningText===this.props.currentPrompt.caption.text){
+  //     return (<Header size="huge" icon="star" content={winningText}/>)
+  //   } else {
+  //     return (<Header size="huge">{winningText}</Header>)
+  //   }
+  // }
 
   startNewGame=()=>{
     fetch(API_URL+`/games/${this.props.currentGame.id}`, {method: 'PATCH',
@@ -74,8 +74,9 @@ class Results extends Component {
 
     return(
       <div className="results">
-        <Header size="large">Winner:</Header>
-        {this.winningCaption()}
+        <Header size="large">original prompt:
+        {this.props.currentPrompt.caption.text}
+        </Header>
         <Image src={this.props.lastAddedPhoto} centered />
         <div className="table">
         <ResultsTable sortedResults={this.sortCaptionsByPoints()}/>

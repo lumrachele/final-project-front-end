@@ -54,7 +54,7 @@ class WaitingRoom extends Component {
         </div>
       </Container>
       {this.props.currentUser && this.props.currentUser.isHost &&
-        <Button color="orange" onClick={this.handleStart}>Start Game!</Button>
+        <Button secondary onClick={this.handleStart}>Start Game!</Button>
       }
       </div>
     )

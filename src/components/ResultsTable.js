@@ -5,7 +5,7 @@ import '../stylesheets/results.css'
 
 class ResultsTable extends Component {
   componentDidMount(){
-    
+
   }
   render(){
     return(
@@ -15,12 +15,12 @@ class ResultsTable extends Component {
           <Table style={{ maxWidth: 450 }} textAlign="center" className="table">
             <Table.Body>
             {this.props.currentPrompt &&
-              this.props.sortedResults.slice(1).map(gc=>{
+              this.props.sortedResults.map(gc=>{
               return <Table.Row key={gc.id}>
                       <Table.Cell>{gc.caption.text}</Table.Cell>
                       <Table.Cell>{gc.points} points</Table.Cell>
 
-                      { this.props.currentPrompt.caption.text === gc.caption.text?
+                      { this.props.currentPrompt.caption.text.includes(gc.caption.text)?
                       <Table.Cell>
                       <Icon name='star' size='large' />
                       </Table.Cell>
