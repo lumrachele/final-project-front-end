@@ -37,8 +37,8 @@ class VotingPage extends Component {
   handleVote = (event, gc)=>{
     if (pointValue > 0){
       // this.setState({clickedColor: 'red'})
-      // event.target.innerText+=` ${pointValue} points `
-      event.target.innerText = ""
+      event.target.innerText+=` ${pointValue} points `
+      // event.target.innerText = ""
       fetch(API_URL+`/game_captions/${gc.id}`, {method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

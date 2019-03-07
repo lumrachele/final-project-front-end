@@ -18,6 +18,21 @@ class Results extends Component {
     loaded: false
   }
 
+
+  download=(photo)=> {
+    // fake server request, getting the file url as response
+    setTimeout(() => {
+      const response = {
+        file: this.props.lastAddedPhoto,
+      };
+      // server sent the url to the file!
+      // now, let's download:
+      // window.location.href = response.file;
+      // you could also do:
+      window.open(response.file);
+    }, 100);
+  }
+
   componentDidMount(){
     console.log("in Results componentDidMount");
     // this.setState({
@@ -50,15 +65,7 @@ class Results extends Component {
     })
     .then(res=>res.json())
     .then(()=>{
-      fetch(API_URL+`/anotherGame`, {method: "POST",
-        headers:{
-          'Content-Type': 'application/json',
-          Accept: 'application/json'
-        },
-      body: JSON.stringify({
-        user_id: this.props.currentUser.id
-      })
-    })
+      fetch(API_URL+`/anotherGame`)
       .then(()=>this.props.anotherGame())
       .then(()=>this.props.history.push('/home'))
     })
@@ -118,7 +125,7 @@ class Results extends Component {
           </Header.Subheader>
         </Header>
         <Image src={this.props.lastAddedPhoto} centered />
-          <a download target="_blank" href={this.state.pic}>download</a>
+          <a download target="_blank" href={this.props.lastAddedPhoto}>download</a>
         <div className="table">
         <br></br>
         <br></br>
