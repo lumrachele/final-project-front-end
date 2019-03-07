@@ -5,8 +5,15 @@ import { Container, Header, Button, List, Image, Form, Label } from 'semantic-ui
 import { ActionCableConsumer } from 'react-actioncable-provider'
 
 const InProgress = props =>{
-  return(
-    <Header as="h1">In Progress Page</Header>
+  return(<>
+    {
+        props.currentUser.isHost
+        ?
+          <Header as="h1">Waiting for players...</Header>
+          :
+          <Header as="h1">It's the host's turn!</Header>
+      }
+    </>
   )
 }
 

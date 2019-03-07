@@ -3,6 +3,7 @@ import {withRouter} from 'react-router-dom'
 import WebcamCapture from './WebcamCapture.js'
 import CaptionSubmissionPage from './CaptionSubmissionPage.js'
 import SubmittedCaptionCounter from './SubmittedCaptionCounter.js'
+import CaptionContainer from './CaptionContainer.js'
 import VotingPage from './VotingPage.js'
 import Results from './Results.js'
 import InProgress from './inProgress.js'
@@ -32,6 +33,7 @@ const Game = props =>{
               <>
                 <InProgress />
                 <SubmittedCaptionCounter/>
+                <CaptionContainer/>
               </>
 
               :
@@ -40,12 +42,9 @@ const Game = props =>{
               <SubmittedCaptionCounter/>
               </>
       case "voting":
-        return props.currentUser.isHost ?
-              <InProgress />
-              :
-              <VotingPage />
+        return <VotingPage />
       case "results":
-      return  <Results />
+        return <Results />
     }
 }
 
@@ -98,11 +97,9 @@ const Game = props =>{
       gameHandleReceived(data)
     }}
     />
-    <Segment clearing>
-      <Header as='h2' floated='right'>
-        <Button onClick={()=>handleLogout()}>Log Out</Button>
-      </Header>
-    </Segment>
+    <div className={"logout-button"}>
+      <Button onClick={()=>handleLogout()}>Log Out</Button>
+    </div>
     {renderGameStage()}
     </>
   )

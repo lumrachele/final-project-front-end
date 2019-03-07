@@ -2,11 +2,13 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import 'semantic-ui-css/semantic.min.css'
 import './index.css';
+import './stylesheets/animate.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { Provider } from 'react-redux'
 import { createStore } from 'redux'
 import { ActionCableProvider } from 'react-actioncable-provider'
+import {Animated} from "react-animated-css";
 
 
 const defaultState = {
@@ -140,6 +142,7 @@ store.subscribe(()=> {
 ReactDOM.render(
   <ActionCableProvider url="ws://localhost:3000/api/v1/cable">
       <Provider store={store}>
+
         <App />
       </Provider>
     </ActionCableProvider>

@@ -36,6 +36,34 @@ class Results extends Component {
 
   }
 
+  componentWillUnmount(){
+    fetch(API_URL+`/games/${this.props.currentGame.id}`, {method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json'
+      },
+      body: JSON.stringify({
+        game:{
+        isActive: false
+        }
+      })
+    })
+    .then(res=>res.json())
+    .then(()=>{
+      fetch(API_URL+`/anotherGame`, {method: "POST",
+        headers:{
+          'Content-Type': 'application/json',
+          Accept: 'application/json'
+        },
+      body: JSON.stringify({
+        user_id: this.props.currentUser.id
+      })
+    })
+      .then(()=>this.props.anotherGame())
+      .then(()=>this.props.history.push('/home'))
+    })
+  }
+
   sortCaptionsByPoints=()=>{
     return this.props.submittedCaptions.sort((a, b)=>{
       return b.points-a.points
@@ -57,14 +85,23 @@ class Results extends Component {
         'Content-Type': 'application/json',
         Accept: 'application/json'
       },
-      body: JSON.stringify({game:{
+      body: JSON.stringify({
+        game:{
         isActive: false
         }
       })
     })
     .then(res=>res.json())
     .then(()=>{
-      fetch(API_URL+`/anotherGame`)
+      fetch(API_URL+`/anotherGame`, {method: "POST",
+        headers:{
+          'Content-Type': 'application/json',
+          Accept: 'application/json'
+        },
+      body: JSON.stringify({
+        user_id: this.props.currentUser.id
+      })
+    })
       .then(()=>this.props.anotherGame())
       .then(()=>this.props.history.push('/home'))
     })
@@ -74,8 +111,11 @@ class Results extends Component {
 
     return(
       <div className="results">
-        <Header size="large">original prompt:
+        <Header size="large">
         {this.props.currentPrompt.caption.text}
+          <Header.Subheader>
+          original prompt
+          </Header.Subheader>
         </Header>
         <Image src={this.props.lastAddedPhoto} centered />
         <div className="table">

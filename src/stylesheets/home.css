@@ -1,0 +1,29 @@
+.rules{
+  font-size: 1.4em;
+  max-width: inherit;
+  /* align-content: flex-start; */
+}
+
+.game-play{
+  /* background-color: rgb(255, 255, 255, 0.9); */
+  width: 80%;
+  transform: translateX(12%);
+  padding-top: 1em;
+}
+
+#home-stuff{
+  transform: translateY(5%);
+}
+
+
+#welcome{
+  text-shadow: 1px 1px #fff;
+}
+
+#fashion{
+  transform: translateY(50%);
+}
+
+#game-play-header{
+  font-size: 2.3em;
+}

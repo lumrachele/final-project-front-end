@@ -6,9 +6,10 @@ import { connect } from 'react-redux'
 // import { addGameCaptions } from '../actions/addGameCaptions.js'
 // import { playerJoin } from '../actions/playerJoin.js'
 // import { addCurrentUser } from '../actions/addCurrentUser.js'
+import '../stylesheets/home.css'
 import { addCurrentUser, newGame, updateAllGames, playerJoin, updateCurrentGame, addPlayers, addHostUserGame, anotherGame, logout } from '../actions/allActions.js'
 import WaitingRoom from './waitingRoom.js'
-import { Container, Header, Button, List, Image, Form, Label, Segment} from 'semantic-ui-react'
+import { Container, Header, Button, List, Image, Icon, Form, Label, Segment, Grid} from 'semantic-ui-react'
 import { ActionCableConsumer } from 'react-actioncable-provider'
 import { onlineRules } from '../constants/rules.js'
 import {API_URL} from '../constants/constants.js'
@@ -27,8 +28,10 @@ class Home extends Component{
   //     })
   // }
 
+
   handleLogout = ()=>{
     this.props.logout()
+    window.location.reload()
     this.props.history.push("/")
   }
 
@@ -131,22 +134,46 @@ class Home extends Component{
     })
     .then(res=>res.json())
     .then(ug=>{
-      fetch(API_URL+`/games`)
-      .then(res=>res.json())
-      .then(games=>{
-        this.props.updateAllGames(games)
-        return games
-      })
-      .then(games=>{
-        const foundGame = this.props.games.find((game) => game.id === parseInt(gameId))
-        this.props.newGame(foundGame, foundGame.game_captions[0], this.props.currentUser)
-      })
-      .then(()=>{
-        this.setState({
-          enterGame: true
+      if (ug.game.isActive){
+        fetch(API_URL+`/games`)
+        .then(res=>res.json())
+        .then(games=>{
+          this.props.updateAllGames(games)
+          return games
         })
-      })
+        .then(games=>{
+          const foundGame = this.props.games.find((game) => game.id === parseInt(gameId))
+          this.props.newGame(foundGame, foundGame.game_captions[0], this.props.currentUser)
+        })
+        .then(()=>{
+          this.setState({
+            enterGame: true
+          })
+        })
+      } else {
+        alert('That game is not currently active.')
+      }
+
+
+
     })
+    // .then(ug=>{
+    //   fetch(API_URL+`/games`)
+    //   .then(res=>res.json())
+    //   .then(games=>{
+    //     this.props.updateAllGames(games)
+    //     return games
+    //   })
+    //   .then(games=>{
+    //     const foundGame = this.props.games.find((game) => game.id === parseInt(gameId))
+    //     this.props.newGame(foundGame, foundGame.game_captions[0], this.props.currentUser)
+    //   })
+    //   .then(()=>{
+    //     this.setState({
+    //       enterGame: true
+    //     })
+    //   })
+    // })
 
   }
 
@@ -186,44 +213,59 @@ class Home extends Component{
         }}
         />
 
-          <Header as='h2' floated='right'>
-            <Button className={"ui right floated button"} onClick={this.handleLogout}>Log Out</Button>
-          </Header>
+          <div className={"logout-button"}>
+            <Button onClick={this.handleLogout}>Log Out</Button>
+          </div>
 
-         <div className='two column row'>
+         <div className='two column row' id={"home-stuff"}>
+
+          <div text className={"column game-play"} textAlign='left' >
+            <Header as="h1" id={"game-play-header"} float="right">Game Play</Header>
+            <Header size="large" float="right">for 3 or more players</Header>
+
+            <div className={'rules'}>
+            <Grid textAlign='left' style={{ height: '100%' }} verticalAlign='middle'>
+              <Grid.Column style={{ maxWidth: 550 }}>
+                <List className={"rules-container"}>
+                  {onlineRules.split(". ").map(rule=>{
+                    return <List.Item as='li' size='large' key={rule.index}>
+
+                    <Icon name="pointing right"/>
+                            {rule}
+                        </List.Item>
+                  })}
+                </List>
+            </Grid.Column>
+          </Grid>
+          </div>
+            <br></br>
+            <br></br>
+
+          </div>
+
           <div text className={'column'}>
-        {!this.state.enterGame ?
-          <>
-            <Header as ="h1">Welcome {this.props.currentUser.username}!</Header>
+          {!this.state.enterGame ?
+            <>
+            <Header as ="h1" id={"welcome"}>Welcome {this.props.currentUser.username}!</Header>
+            <br></br>
+            <br></br>
             <Button secondary className={"huge"} onClick={this.createGame}>Host A New Game</Button>
             <br></br>
             <Header as ="h3">or</Header>
             <br></br>
 
             {<Form onSubmit={this.submitGameCode}>
-              <h3>Enter Game Code to Join an Existing Game</h3>
-              <Form.Input type="text" value={this.state.gameCode} onChange={this.grabGameCode} placeholder={'game code'}style={{ maxWidth: 200 }}>
-              </Form.Input>
+            <h3>Enter Game Code to Join an Existing Game</h3>
+            <Form.Input type="text" value={this.state.gameCode} onChange={this.grabGameCode} placeholder={'game code'}style={{ maxWidth: 200 }}>
+            </Form.Input>
             </Form>}
-          </>
-          :
+            <Image id={"fashion"} centered src="https://media3.giphy.com/media/OFcP2ojNIAkec/giphy.gif?cid=3640f6095c75a70342574d766fce6c67"/>
+            <br></br>
+
+            </>
+            :
             <WaitingRoom />
           }
-          </div>
-
-          <div text className={"column"}>
-            <Header size="huge" float="right">Game Play</Header>
-            <Header size="huge" float="right">for 3 or more players</Header>
-            <List as='ol'>
-              {onlineRules.split(". ").map(rule=>{
-                return <List.Item as='li' size='large' key={rule.index}>
-                        {rule}
-                      </List.Item>
-              })}
-            </List>
-            <Image centered src="https://media3.giphy.com/media/OFcP2ojNIAkec/giphy.gif?cid=3640f6095c75a70342574d766fce6c67"/>
-            <br></br>
-            <Image centered src="https://media.giphy.com/media/KQLQGy30Hk5S8/giphy.gif"/>
           </div>
         </div>
       </div>
@@ -236,3 +278,5 @@ const mapStateToProps = (state)=>{
 }
 
 export default connect(mapStateToProps, { newGame, updateAllGames, updateCurrentGame, addPlayers, addCurrentUser, addHostUserGame, anotherGame, logout })(withRouter(Home))
+
+// <Image centered src="https://media.giphy.com/media/KQLQGy30Hk5S8/giphy.gif"/>

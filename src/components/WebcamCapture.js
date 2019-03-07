@@ -12,7 +12,8 @@ class WebcamCapture extends Component {
   state={
     pic:"",
     timer: null,
-    counter: 5
+    counter: 5,
+    showCounter: true
   };
 
   setRef = webcam => {
@@ -36,7 +37,8 @@ class WebcamCapture extends Component {
     }
     else {
     this.capture()
-    clearInterval(this.state.timer);
+    clearInterval(this.state.timer)
+    this.setState({showCounter: false})
     }
   }
 
@@ -96,9 +98,7 @@ class WebcamCapture extends Component {
     // }
     return (
       <div>
-      <Header as="h2">
-      {this.state.counter} s
-      </Header>
+{this.state.showCounter && <Header as="h2">{this.state.counter} seconds remaining</Header>}
         {this.state.pic ?
           <>
             <Image centered src={this.state.pic} alt={"hi"}/>

@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import { connect } from 'react-redux'
 // import shuffle from 'shuffle-array'
 // import { Button } from 'semantic-ui-react'
+import { Header, Image, Button, Grid, Card } from 'semantic-ui-react'
 
 class CaptionContainer extends Component {
 
@@ -9,21 +10,21 @@ class CaptionContainer extends Component {
   render(){
     return(
       <div>
-      <h2>
-        Caption Container
-      </h2>
+
       <p>
         maps over the submitted captions in state
       </p>
-      <ul>
-      {this.props.submittedCaptions.map((caption)=>{
+      <Grid textAlign='center' style={{ height: '100%' }} verticalAlign='middle'>
+        <Grid.Column style={{ maxWidth: 450 }}>
+      {this.props.submittedCaptions.map((gc)=>{
         return(
-          <li key={caption.id} >
-          {caption.text}
-          </li>
+          <Card className={"ui card"} key={gc.id}>
+            <Card.Content>{gc.caption.text}</Card.Content>
+          </Card>
         )
       })}
-      </ul>
+      </Grid.Column>
+    </Grid>
       </div>
     )
   }
@@ -35,3 +36,5 @@ const mapStateToProps = (state)=>{
 }
 
 export default connect(mapStateToProps)(CaptionContainer)
+
+    // <Header as="h2">Entries</Header>

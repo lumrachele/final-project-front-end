@@ -2,6 +2,7 @@ import React , { Component } from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import { addCurrentUser, init } from '../actions/allActions.js'
+import {Animated} from "react-animated-css";
 // import { init } from '../actions/init'
 import { Header, Image, Button, Grid, Form, Segment, Message } from 'semantic-ui-react'
 import '../stylesheets/login.css'
@@ -73,14 +74,23 @@ class Login extends Component {
   render(){
     return (
       <div className="login">
+
+      <div className={"title"}>
       <Header as="h2" icon textAlign="center">
-        <Header.Content className={'oui'}>wee!</Header.Content>
-        <Header.Subheader></Header.Subheader>
+        <Header.Content id={'title-content'}>Weegle</Header.Content>
+        </Header>
+        <br></br>
+          <Header as="h2" icon textAlign="center">
+        <Header.Subheader id={"description"}>The hit new party game that makes you weegle and geegle!</Header.Subheader>
       </Header>
+      </div>
+
       <br></br>
+
+
       <Grid textAlign='center' style={{ height: '100%' }} verticalAlign='middle'>
         <Grid.Column style={{ maxWidth: 450 }} className={"signup-form"}>
-          <Header as='h3' color='black' textAlign='center'>
+          <Header as='h2' color='black' textAlign='center'>
             Create your username
           </Header>
           <Form size='large' onSubmit={this.handleCreateNew} >
