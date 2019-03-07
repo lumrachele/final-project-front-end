@@ -2,14 +2,17 @@ import shuffle from 'shuffle-array'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
-import { Image, Button, Grid, Header } from 'semantic-ui-react'
-import { updateCurrentGame, statusResults } from '../actions/allActions.js'
+import { Image, Button, Grid, Header, Card, List } from 'semantic-ui-react'
+import { updateCurrentGame, statusResults, replaceGC } from '../actions/allActions.js'
+
+import '../stylesheets/VotingPage.css'
 import {API_URL} from '../constants/constants.js'
 
 let pointValue = 3
 
 class VotingPage extends Component {
   state={
+    // clickedColor: "",
     // captions: [],
     // gameCaptions: []
     shuffledCaptions: []
@@ -33,7 +36,9 @@ class VotingPage extends Component {
 
   handleVote = (event, gc)=>{
     if (pointValue > 0){
+      // this.setState({clickedColor: 'red'})
       event.target.innerText+=` ${pointValue} points `
+      // event.target.innerText = ""
       fetch(API_URL+`/game_captions/${gc.id}`, {method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -46,6 +51,7 @@ class VotingPage extends Component {
         })
       })
       .then(res=> res.json())
+      .then(gc=> this.props.replaceGC(gc))
       .then(gc=> pointValue--)
     }//end of if statement
     else {
@@ -76,25 +82,34 @@ class VotingPage extends Component {
 
   render(){
     return(
-      <>
+      <div className={"voting"}>
       <Header size='huge'>TIME TO VOTE!</Header>
-      <Header as='h3'>Select your top 3 choices</Header>
+      <Header as='h3'>Select your top 3 choices in order.</Header>
+      <List>
+        <List.Item>first click - 3 points</List.Item>
+        <List.Item>second click - 2 points</List.Item>
+        <List.Item>third click - 1 points</List.Item>
+      </List>
       {this.props.lastAddedPhoto &&
         <Image centered src={this.props.lastAddedPhoto} alt={"hi"}/>
       }
-      <Grid textAlign='center' style={{ height: '100%' }} verticalAlign='middle'>
-        <Grid.Column style={{ maxWidth: 450 }}>
+
+      <br></br>
+      <Grid textAlign='center' style={{ height: '100%'}} verticalAlign='middle'>
+
+        <Grid.Column verticalAlign='middle' id={'captions'} style={{maxWidth: 450}}>
         {this.state.shuffledCaptions.map((gc)=>{
-          return <div class="ui card" key={gc.id} onClick={(event)=>this.handleVote(event, gc)}>
-            <p>{gc.caption.text}</p>
-            </div>
+          return <Card className={"ui card entry"}  key={gc.id} onClick={(event)=>this.handleVote(event, gc)}>
+            <Card.Content >{gc.caption.text}</Card.Content>
+            </Card>
           })
         }
         </Grid.Column>
+
       </Grid>
 
-      <Button color="orange" onClick={this.goToResults}>Go to results!</Button>
-      </>
+      <Button secondary onClick={this.goToResults}>Go to results!</Button>
+      </div>
     )
   }
 }
@@ -103,4 +118,4 @@ const mapStateToProps = (state)=>{
   return state
 }
 
-export default connect(mapStateToProps, {updateCurrentGame, statusResults})(withRouter(VotingPage))
+export default connect(mapStateToProps, {updateCurrentGame, statusResults, replaceGC})(withRouter(VotingPage))

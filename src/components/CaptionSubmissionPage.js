@@ -15,7 +15,7 @@ class CaptionSubmissionPage extends Component {
     photo: "",
     currentInput: "",
     timer: null,
-    counter: 45,
+    counter: 10,
     showForm: true,
     showGoToVoting: false,
     clickedDone: false
@@ -119,7 +119,18 @@ class CaptionSubmissionPage extends Component {
       return(
       <div className={"captionSubmissionPage"}>
         <Header size="huge">What do you think the original prompt was?</Header>
-        <Header as="h2">You have <strong>{this.state.counter} s</strong> remaining.</Header>
+
+{this.state.showGoToVoting
+  ?
+  <>
+  <Header as="h2">Great work! Let's go to the polls</Header>
+  <br></br>
+  <Button secondary onClick={this.goToVoting}>Go to Voting</Button>
+  <br></br>
+  </>
+   :
+   <Header as="h2">You have <strong>{this.state.counter} s</strong> remaining.</Header>}
+
           <Image centered src={this.props.lastAddedPhoto} alt={"hi"}/>
 
         { this.state.showForm &&
@@ -131,17 +142,17 @@ class CaptionSubmissionPage extends Component {
               <input type="text" name="captionSubmission" onChange={this.handleChange}value={this.state.currentInput}/>
               <br></br>
               <br></br>
-              <Button secondary>Submit Answer</Button>
+              <Button >Submit Answer</Button>
             </Form>
             </Grid.Column>
           </Grid>
         }
-          {this.state.showGoToVoting && <Button secondary onClick={this.goToVoting}>Go to Voting</Button>}
+        <br></br>
         <br></br>
         {this.props.submittedCaptions.length >= 3 && !this.state.clickedDone &&
-          <Button onClick={this.handleDone}>Done</Button>
+          <Button secondary onClick={this.handleDone}>Done</Button>
         }
-        {this.state.clickedDone && <Header as="h3">Waiting for other players' submissions... </Header>}
+        {this.state.clickedDone && !this.state.showGoToVoting && <Header as="h3">Waiting for other players' submissions... </Header>}
       </div>)
     }
   }

@@ -8,9 +8,9 @@
   width: auto;
 }
 
-strong:hover{
+/* header:hover{
   color: blue
-}
+} */
 
 .new-user-form{
   height: auto;
@@ -19,15 +19,67 @@ strong:hover{
   border-color: solid black;
 }
 
-.oui{
-  transform: translateY(70%);
-  font-size: 10em;
+#title-content{
+  /* transform: translateY(70%); */
+  font-size: 8em;
+
   /* text-decoration: underline; */
   /* text-decoration-color: #fff; */
   /* text-decoration-style: wavy; */
   text-shadow: 5px 5px #fff;
 }
 
+
 .signup-form{
-  transform: translateY(100%);
+  float: right;
+  transform: translate(20%, 100%);
+}
+
+.title{
+  display: block;
+  float: left;
+
+  animation: shake 1s cubic-bezier(.36,.07,.19,.97) both;
+  transform: translate3d(50%, 200%, 0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+
+.title :hover {
+  transform: translateY(-7%);
+}
+
+@keyframes shake {
+  10%, 90% {
+    transform: translate3d(48%, 200%, 0);
+  }
+
+  20%, 80% {
+    transform: translate3d(52%, 200%, 0);
+  }
+
+  30%, 50%, 70% {
+    transform: translate3d(48%, 200%, 0);
+  }
+
+  40%, 60% {
+    transform: translate3d(52%, 200%, 0);
+  }
+}
+
+#description{
+  font-size: 1em;
+  transform: translateY(130%);
+}
+/*
+ #title-content>.letter :hover{
+  transform: translateY(-7%);
+} */
+.letter{
+  display: inline-flex;
+}
+
+.letter :hover{
+  transform: translateY(-10%);
 }

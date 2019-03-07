@@ -66,7 +66,3 @@ class App extends Component {
 // }
 
 export default connect(null, { addPlayers, updateCurrentGame})(App);
-
-// <Route exact path={"/submitCaptions"} component={()=>this.renderPage('captions')}/>
-// <Route exact path={"/votingPage"} component={()=>this.renderPage('voting')}/>
-// <Route exact path={"/results"} component={()=>this.renderPage('results')}/>

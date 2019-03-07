@@ -12,7 +12,8 @@ class WebcamCapture extends Component {
   state={
     pic:"",
     timer: null,
-    counter: 5
+    counter: 5,
+    showCounter: true
   };
 
   setRef = webcam => {
@@ -36,7 +37,8 @@ class WebcamCapture extends Component {
     }
     else {
     this.capture()
-    clearInterval(this.state.timer);
+    clearInterval(this.state.timer)
+    this.setState({showCounter: false})
     }
   }
 
@@ -96,10 +98,29 @@ class WebcamCapture extends Component {
     // }
     return (
       <div>
-      <Header as="h2">
-      {this.state.counter} s
-      </Header>
-        {this.state.pic ?
+{this.state.showCounter
+  ?
+  <>
+  <Header as="H2">Your prompt:
+  <br></br>
+  {this.props.currentPrompt && this.props.currentPrompt.caption.text}</Header>
+
+  <Header as="h3">{this.state.counter} seconds remaining</Header>
+
+  <Webcam
+    audio={false}
+    ref={this.setRef}
+    screenshotFormat="image/jpeg"
+  />
+  <br></br>
+
+  </>
+  :
+  <Header as="h2">NICE! Send it to the Game Room 🤪</Header>
+
+
+}
+        {this.state.pic &&
           <>
             <Image centered src={this.state.pic} alt={"hi"}/>
             <br></br>
@@ -107,19 +128,8 @@ class WebcamCapture extends Component {
             <Button color="orange" onClick={this.goToCaptions}>Dispatch Photo to Gameroom</Button>
             <br></br>
             <br></br>
-            <a href={this.state.pic} title={this.props.currentPrompt.id} download target="_blank" rel="noopener noreferrer">
-            Download photo</a>
-          </>
-          :
-          <>
-          <h2>Your prompt: <br></br>{this.props.currentPrompt && this.props.currentPrompt.caption.text}</h2>
 
-          <Webcam
-            audio={false}
-            ref={this.setRef}
-            screenshotFormat="image/jpeg"
-          />
-          <br></br>
+            <a download target="_blank" href={this.state.pic}>download</a>
           </>
         }
       </div>
