@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Table, Icon, Grid } from 'semantic-ui-react'
 import '../stylesheets/results.css'
+import '../stylesheets/ResultsTable.css'
 
 class ResultsTable extends Component {
   componentDidMount(){
@@ -17,7 +18,7 @@ class ResultsTable extends Component {
             {this.props.currentPrompt &&
               this.props.sortedResults.map(gc=>{
               return <Table.Row key={gc.id}>
-                      <Table.Cell>{gc.caption.text}</Table.Cell>
+                      <Table.Cell className={'result-entry'}>{gc.caption.text}</Table.Cell>
                       <Table.Cell>{gc.points} points</Table.Cell>
 
                       { this.props.currentPrompt.caption.text.includes(gc.caption.text)?

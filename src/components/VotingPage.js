@@ -2,7 +2,7 @@ import shuffle from 'shuffle-array'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
-import { Image, Button, Grid, Header, Card } from 'semantic-ui-react'
+import { Image, Button, Grid, Header, Card, List } from 'semantic-ui-react'
 import { updateCurrentGame, statusResults, replaceGC } from '../actions/allActions.js'
 
 import '../stylesheets/VotingPage.css'
@@ -12,7 +12,7 @@ let pointValue = 3
 
 class VotingPage extends Component {
   state={
-    clickedColor: "",
+    // clickedColor: "",
     // captions: [],
     // gameCaptions: []
     shuffledCaptions: []
@@ -36,8 +36,9 @@ class VotingPage extends Component {
 
   handleVote = (event, gc)=>{
     if (pointValue > 0){
-      this.setState({clickedColor: 'red'})
-      event.target.innerText+=` ${pointValue} points `
+      // this.setState({clickedColor: 'red'})
+      // event.target.innerText+=` ${pointValue} points `
+      event.target.innerText = ""
       fetch(API_URL+`/game_captions/${gc.id}`, {method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -81,25 +82,34 @@ class VotingPage extends Component {
 
   render(){
     return(
-      <>
+      <div className={"voting"}>
       <Header size='huge'>TIME TO VOTE!</Header>
-      <Header as='h3'>Select your top 3 choices in order from first choice to third choice.</Header>
+      <Header as='h3'>Select your top 3 choices in order.</Header>
+      <List>
+        <List.Item>first click - 3 points</List.Item>
+        <List.Item>second click - 2 points</List.Item>
+        <List.Item>third click - 1 points</List.Item>
+      </List>
       {this.props.lastAddedPhoto &&
         <Image centered src={this.props.lastAddedPhoto} alt={"hi"}/>
       }
-      <Grid textAlign='center' style={{ height: '100%' }} verticalAlign='middle'>
-        <Grid.Column style={{ maxWidth: 450}} verticalAlign='middle' id={'captions'}>
+
+      <br></br>
+      <Grid textAlign='center' style={{ height: '100%'}} verticalAlign='middle'>
+
+        <Grid.Column verticalAlign='middle' id={'captions'} style={{maxWidth: 450}}>
         {this.state.shuffledCaptions.map((gc)=>{
-          return <Card className={"ui card entry"} style={{backgroundColor: this.state.clickedColor}} key={gc.id} onClick={(event)=>this.handleVote(event, gc)}>
+          return <Card className={"ui card entry"}  key={gc.id} onClick={(event)=>this.handleVote(event, gc)}>
             <Card.Content >{gc.caption.text}</Card.Content>
             </Card>
           })
         }
         </Grid.Column>
+
       </Grid>
 
       <Button secondary onClick={this.goToResults}>Go to results!</Button>
-      </>
+      </div>
     )
   }
 }

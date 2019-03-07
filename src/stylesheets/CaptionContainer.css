@@ -1,0 +1,7 @@
+.entries{
+  width: 500px;
+  position: absolute;
+  display: block;
+  align-items: center;
+  transform: translate(140%, 10%);
+}

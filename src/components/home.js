@@ -6,6 +6,8 @@ import { connect } from 'react-redux'
 // import { addGameCaptions } from '../actions/addGameCaptions.js'
 // import { playerJoin } from '../actions/playerJoin.js'
 // import { addCurrentUser } from '../actions/addCurrentUser.js'
+import {Animated} from "react-animated-css";
+
 import '../stylesheets/home.css'
 import { addCurrentUser, newGame, updateAllGames, playerJoin, updateCurrentGame, addPlayers, addHostUserGame, anotherGame, logout } from '../actions/allActions.js'
 import WaitingRoom from './waitingRoom.js'
@@ -217,33 +219,45 @@ class Home extends Component{
             <Button onClick={this.handleLogout}>Log Out</Button>
           </div>
 
+          <div className={'rotated'}></div>
          <div className='two column row' id={"home-stuff"}>
 
+         <Animated animationIn="bounceInDown" isVisible={true}>
+
+
           <div text className={"column game-play"} textAlign='left' >
-            <Header as="h1" id={"game-play-header"} float="right">Game Play</Header>
-            <Header size="large" float="right">for 3 or more players</Header>
 
             <div className={'rules'}>
-            <Grid textAlign='left' style={{ height: '100%' }} verticalAlign='middle'>
-              <Grid.Column style={{ maxWidth: 550 }}>
+            <Grid style={{ height: '100%', maxWidth: '700px' }} verticalAlign='middle'>
+
+            <Grid.Row stretched>
+              <Grid.Column >
+              <Header as="h1" id={"game-play-header"} float="right">Game Play</Header>
+              <Header size="large" float="right">for 3 or more players</Header>
                 <List className={"rules-container"}>
                   {onlineRules.split(". ").map(rule=>{
-                    return <List.Item as='li' size='large' key={rule.index}>
-
-                    <Icon name="pointing right"/>
+                    return <>
+                      <List.Item as='li' size='large' key={rule.index} className={'each-rule'}>
+                      <Icon name="pointing right"/>
                             {rule}
+                            <br></br>
+                            <br></br>
                         </List.Item>
+                        </>
                   })}
                 </List>
-            </Grid.Column>
+                </Grid.Column>
+            </Grid.Row>
           </Grid>
           </div>
             <br></br>
             <br></br>
 
-          </div>
 
-          <div text className={'column'}>
+          </div>
+          </Animated>
+
+          <div textAlign="center" className={'column welcome'}>
           {!this.state.enterGame ?
             <>
             <Header as ="h1" id={"welcome"}>Welcome {this.props.currentUser.username}!</Header>
@@ -266,7 +280,7 @@ class Home extends Component{
             :
             <WaitingRoom />
           }
-          </div>
+        </div>
         </div>
       </div>
     )

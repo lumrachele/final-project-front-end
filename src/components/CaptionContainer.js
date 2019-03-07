@@ -3,28 +3,27 @@ import { connect } from 'react-redux'
 // import shuffle from 'shuffle-array'
 // import { Button } from 'semantic-ui-react'
 import { Header, Image, Button, Grid, Card } from 'semantic-ui-react'
+import '../stylesheets/CaptionContainer.css'
 
 class CaptionContainer extends Component {
 
 
   render(){
     return(
-      <div>
+      <div className={'entries'}>
+        <Grid textAlign='center' style={{ height: '100%'}} verticalAlign='middle'>
+        <Grid.Row stretched textAlign='center'>
 
-      <p>
-        maps over the submitted captions in state
-      </p>
-      <Grid textAlign='center' style={{ height: '100%' }} verticalAlign='middle'>
-        <Grid.Column style={{ maxWidth: 450 }}>
       {this.props.submittedCaptions.map((gc)=>{
         return(
-          <Card className={"ui card"} key={gc.id}>
-            <Card.Content>{gc.caption.text}</Card.Content>
-          </Card>
+            <Card className={"ui card"} key={gc.id}>
+              <Card.Content>{gc.caption.text}</Card.Content>
+              </Card>
         )
       })}
-      </Grid.Column>
-    </Grid>
+
+          </Grid.Row>
+        </Grid>
       </div>
     )
   }

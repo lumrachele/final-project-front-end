@@ -119,7 +119,18 @@ class CaptionSubmissionPage extends Component {
       return(
       <div className={"captionSubmissionPage"}>
         <Header size="huge">What do you think the original prompt was?</Header>
-        <Header as="h2">You have <strong>{this.state.counter} s</strong> remaining.</Header>
+
+{this.state.showGoToVoting
+  ?
+  <>
+  <Header as="h2">Great work! Let's go to the polls</Header>
+  <br></br>
+  <Button secondary onClick={this.goToVoting}>Go to Voting</Button>
+  <br></br>
+  </>
+   :
+   <Header as="h2">You have <strong>{this.state.counter} s</strong> remaining.</Header>}
+
           <Image centered src={this.props.lastAddedPhoto} alt={"hi"}/>
 
         { this.state.showForm &&
@@ -137,8 +148,6 @@ class CaptionSubmissionPage extends Component {
           </Grid>
         }
         <br></br>
-        <br></br>
-          {this.state.showGoToVoting && <Button secondary onClick={this.goToVoting}>Go to Voting</Button>}
         <br></br>
         {this.props.submittedCaptions.length >= 3 && !this.state.clickedDone &&
           <Button secondary onClick={this.handleDone}>Done</Button>

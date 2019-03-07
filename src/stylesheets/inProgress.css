@@ -1,0 +1,9 @@
+.progress{
+  transform: translateY(30%);
+  /* position: absolute; */
+    z-index: 1;
+}
+
+.loading{
+  transform: translateY(10%);
+}

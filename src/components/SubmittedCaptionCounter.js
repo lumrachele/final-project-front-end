@@ -11,7 +11,7 @@ import { Button, Grid, Image, Header, Form, Label } from 'semantic-ui-react'
 const SubmittedCaptionCounter = props => {
     return(
       <div className='counter'>
-      <h1>Total entries: {props.submittedCaptions.length}</h1>
+      <h1>{props.submittedCaptions.length} entries</h1>
       </div>
     )
 }

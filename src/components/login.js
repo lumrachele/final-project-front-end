@@ -77,7 +77,16 @@ class Login extends Component {
 
       <div className={"title"}>
       <Header as="h2" icon textAlign="center">
-        <Header.Content id={'title-content'}>Weegle</Header.Content>
+        <Header.Content id={'title-content'}>
+
+        <div className={'letter'}>W</div>
+        <div className={'letter'}>e</div>
+        <div className={'letter'}>e</div>
+        <div className={'letter'}>g</div>
+        <div className={'letter'}>l</div>
+        <div className={'letter'}>e</div>
+
+        </Header.Content>
         </Header>
         <br></br>
           <Header as="h2" icon textAlign="center">

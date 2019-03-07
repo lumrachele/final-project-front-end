@@ -118,13 +118,16 @@ class Results extends Component {
           </Header.Subheader>
         </Header>
         <Image src={this.props.lastAddedPhoto} centered />
+          <a download target="_blank" href={this.state.pic}>download</a>
         <div className="table">
+        <br></br>
+        <br></br>
         <ResultsTable sortedResults={this.sortCaptionsByPoints()}/>
         </div>
 
         {this.props.currentUser.isHost
           &&
-          <Button color="orange" onClick={this.startNewGame}>START A NEW GAME</Button>}
+          <Button color="orange" className={"huge"} onClick={this.startNewGame}>START A NEW GAME!</Button>}
       </div>
 
     )

@@ -1,5 +1,16 @@
 #captions{
+  /* position: fixed; */
   text-align: center;
   align-items: center;
+  transform: translateX(15%);
 }
- 
+
+#entry{
+  position: inherit;
+  align-items: center;
+}
+
+.voting{
+  position:inherit;
+  display: block;
+}

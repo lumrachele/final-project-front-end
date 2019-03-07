@@ -11,6 +11,7 @@ import { connect } from 'react-redux'
 import { Header, Button, Segment } from 'semantic-ui-react'
 import {statusCaptions, statusResults, getPhoto, addGameCaption, statusVoting, updateCurrentGame, anotherGame, replaceGC, logout} from '../actions/allActions'
 import { ActionCableConsumer } from 'react-actioncable-provider'
+import '../stylesheets/game.css'
 import {API_URL} from '../constants/constants.js'
 
 
@@ -30,11 +31,11 @@ const Game = props =>{
           <InProgress />
       case "captions":
         return props.currentUser.isHost ?
-              <>
+              <div className={"waiting"}>
                 <InProgress />
                 <SubmittedCaptionCounter/>
                 <CaptionContainer/>
-              </>
+              </div>
 
               :
               <>
