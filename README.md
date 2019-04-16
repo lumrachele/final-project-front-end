@@ -1,68 +1,74 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Weegle: The Frontend
 
-## Available Scripts
+This React web application is the frontend for Weegle, the interactive charades-like party game. <a href=https://vimeo.com/329654271>Demo Video</a>
 
-In the project directory, you can run:
+Backend: [Weegle Backend Repository](https://github.com/lumrachele/final-project-back-end)
 
-### `npm start`
+<h2>Contents</h2>
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+* [Libraries & Middleware](#libraries-&-middleware)
+* [Installation](#installation)
+* [Structure](#structure)
+* [Components](#components)
+* [User Accounts](#user-accounts)
+* [Future Development](#future-development)
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
 
-### `npm test`
+# <h2>Libraries & Middleware</h2>
+This application was built using [Create React App](https://github.com/facebook/create-react-app). Both Redux and React state are implemented to manage the global state and local state of different components. ActionCableConsumer is used to communicate with other users in the same game via websockets, and perform actions upon receiving connections. React Webcam is used to enable use of the computer's webcam. React Router Dom is used to manage routes and browser history. React Animated CSS is used for creative transitions upon component mounting. This application is styled with Semantic UI React and custom CSS. 
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+# <h2>Installation</h2>
+To play Weegle, fork and clone this repository, along with the [backend repository](https://github.com/lumrachele/final-project-back-end). run ```npm install``` to install all necessary dependencies as a ```node_modules directory```. Then, run ```npm start``` to run the application, and navigate to http://localhost:3001, or any port that differs from that of the backend.
 
-### `npm run build`
+# <h2>Structure</h2>
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- app
+  - src
+    - actions
+      - allActions.js
+    - [components](#components)
+    - constants
+      - constants.js
+      - rules.js
+    - stylesheets (this directory is self-explanatory; contains all of the stylesheets for each component)
+    - index.js (returns App.js wrapped in a redux state Provider component as well as an Action Cable Provider component.)
+    - App.js (houses the entirety of the game play components; wrapped in a router and that switches which route and further which component is rendered based on Redux global state)
+    
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+# <h2>Main Components</h2>
 
-### `npm run eject`
+- <h3>login</h3>
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+- <h3>home</h3>
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- <h3>game</h3>
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+- <h3>WebcamCapture</h3>
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+- <h3>CaptionSubmissionPage</h3>
 
-## Learn More
+- <h3>VotingPage</h3>
+
+- <h3>Results</h3>
+
+- <h3>inProgress</h3>
+
+
+# <h2>User Accounts</h2>
+To provide simplicity for user enjoyment, users simply create a username to join the game. No password or authentication is needed, since no user data needs to be saved.
+
+# <h2>Future Development</h2>
+- allow users to visit their Cloudinary Album of photos of the same session
+- identify separate channel receiver (different from home channel) for unique game channels
+- implement host function - allow users to play the same game but switch out host
+- delete users upon logout
+- create a react native version
+- create a single device version
+
+At this moment, this application is not accepting open source contributions.
+
 
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
