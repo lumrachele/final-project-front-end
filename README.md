@@ -9,7 +9,7 @@ Backend: [Weegle Backend Repository](https://github.com/lumrachele/final-project
 * [Libraries & Middleware](#libraries-&-middleware)
 * [Installation](#installation)
 * [Structure](#structure)
-* [Components](#components)
+* [Main Components](#main-components)
 * [User Accounts](#user-accounts)
 * [Future Development](#future-development)
 
@@ -26,7 +26,7 @@ To play Weegle, fork and clone this repository, along with the [backend reposito
   - src
     - actions
       - allActions.js
-    - [components](#components)
+    - [components](#main-components)
     - constants
       - constants.js
       - rules.js
@@ -39,21 +39,28 @@ To play Weegle, fork and clone this repository, along with the [backend reposito
 # <h2>Main Components</h2>
 
 - <h3>login</h3>
+This component manages the login page at the main route of the project. It accepts a user's input, and upon submission it sends a fetch request to the backend to create a username in the database. It then redirects to the home page at route ```/home```.
 
 - <h3>home</h3>
+ The ```home``` component displays the rules of the game as well as options to host or join a game using the host button, or the input box for "game room code". After a user chooses an option, the form will hide and the ```waitingRoom``` component will show, displaying all of the players in the room. The host will have the functionality to start the game.
 
 - <h3>game</h3>
+When a game has begun, the ```game``` component is rendered and the route also changes to ```/game```. Based on the status of the game, and the host attribute of the player, the following components are rendered:
 
-- <h3>WebcamCapture</h3>
+  - <h3>WebcamCapture</h3>
+  The host sees this component in the first stage of the game. A prompt is generated at the top of the webpage, and the webcam is accessed. At the end of the countdown, the webcam captures a photo that is then sent to the backend, uploaded to Cloudinary, stored as a url in the database, and sent back to the frontend, taking the place of the live stream of the webcam. The host clicks the "dispatch to gameroom" button, which progresses the stage of the game.
 
-- <h3>CaptionSubmissionPage</h3>
+  - <h3>CaptionSubmissionPage</h3>
+  During the second stage of the game, the players (not the host) will see the image that was captured along with an input form for caption submission. Players can submit as many captions as they like until the timer runs out. A "go to voting" button is displayed to go to the next stage of the game.
 
-- <h3>VotingPage</h3>
+  - <h3>VotingPage</h3>
+  In this component, players have the ability to vote on their top three favorite submitted captions. This updates each gameCaption with point values, so that the captions can be ranked in the ```results``` component.
 
-- <h3>Results</h3>
+  - <h3>Results</h3>
+  The original prompt is revealed, and the captions are ranked from highest points to lowest. The host has an option to host another game, which redirects all players back to the home page.
 
-- <h3>inProgress</h3>
-
+  - <h3>inProgress</h3>
+  This component is rendered whenever either the host or the players have no immediate action to do. This ```inProgress``` page displays a loading gif along with any relevant information as to what the players or the host are doing.
 
 # <h2>User Accounts</h2>
 To provide simplicity for user enjoyment, users simply create a username to join the game. No password or authentication is needed, since no user data needs to be saved.
